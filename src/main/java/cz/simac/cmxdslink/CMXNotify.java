@@ -21,9 +21,11 @@ public class CMXNotify {
     public String manufacturer;
     public String apMacAddress;
     public String band;
+
     public CMXNotify() {
 
     }
+
     //copy constructor
     public CMXNotify(CMXNotify notify) {
         this.deviceId = notify.deviceId;
@@ -36,6 +38,7 @@ public class CMXNotify {
         this.band = notify.band;
     }
 
+    // encode string input to CMXNotify object
     public static CMXNotify[] encodeJSON(String data) {
         JSONParser parser = new JSONParser();
         List<CMXNotify> list = new ArrayList<>();

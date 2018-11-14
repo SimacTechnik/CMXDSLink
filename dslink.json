@@ -41,6 +41,14 @@
 		"handler_class": {
 			"type": "string",
 			"default": "cz.simac.cmxdslink.CMXDSLink"
+		},
+		"ip": {
+			"type": "string",
+			"default": "0.0.0.0"
+		},
+		"port": {
+			"type": "int",
+			"defualt": 9090
 		}
 	}
 }

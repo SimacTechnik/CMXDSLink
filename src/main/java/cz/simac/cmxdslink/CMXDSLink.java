@@ -55,7 +55,7 @@ public class CMXDSLink extends DSLinkHandler {
             receiver = new CMXNotifyReceiver(superRoot, cmxListennerAddress, connected);
             try {
                 receiver.run();
-            } catch (IOException ie) {
+            } catch (IOException ignore) {
             }
         });
     }
