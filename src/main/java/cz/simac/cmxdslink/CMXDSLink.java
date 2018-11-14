@@ -24,8 +24,6 @@ public class CMXDSLink extends DSLinkHandler {
 
     private Node superRoot;
 
-    private final Random RANDOM = new Random();
-
     private DSLink link;
 
     private CMXNotifyReceiver receiver;
