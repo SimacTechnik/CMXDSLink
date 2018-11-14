@@ -75,7 +75,7 @@ public class CMXNotify
 
     public void update(Node rootNode){
         System.out.println("in update() method");
-        Node node = getOrCreate(rootNode, deviceId.replace(":", ""))
+        Node node = getOrCreate(rootNode, deviceId)
                 .setDisplayName(deviceId)
                 .setSerializable(true)
                 .build();
@@ -144,10 +144,10 @@ public class CMXNotify
 
     private NodeBuilder getOrCreate(Node node, String name){
         System.out.println("in getOrCreate() method");
-        Node child = node.getChild(name, false);
+        Node child = node.getChild(name, true);
         if(child == null) {
             System.out.println("creating new child");
-            return node.createChild(name, false);
+            return node.createChild(name, true);
         }
         else {
             System.out.println("creating fake builder");
