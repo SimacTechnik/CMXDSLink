@@ -51,7 +51,7 @@ public class Main {
         if (socket.isUnresolved()) {
             socket = new InetSocketAddress(DEFAULT_IP, DEFAULT_PORT);
         }
-        List<String> argsList = cl.getArgList();
+        List<String> argsList = Arrays.asList(args);
         argsList.remove("ip");
         argsList.remove("i");
         argsList.remove("port");
