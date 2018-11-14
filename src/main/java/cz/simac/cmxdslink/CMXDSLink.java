@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CMXDSLink extends DSLinkHandler {
 
@@ -30,6 +31,8 @@ public class CMXDSLink extends DSLinkHandler {
     private CMXNotifyReceiver receiver;
 
     private InetSocketAddress cmxListennerAddress = new InetSocketAddress(9090);
+
+    private AtomicBoolean connected = new AtomicBoolean(false);
 
     public CMXDSLink(){
         super();
@@ -49,6 +52,7 @@ public class CMXDSLink extends DSLinkHandler {
     public void onResponderConnected(final DSLink link) {
         LOGGER.info("Connected");
         this.link = link;
+        this.connected.set(true);
     }
 
     @Override
@@ -56,11 +60,17 @@ public class CMXDSLink extends DSLinkHandler {
         LOGGER.info("Initialized");
         superRoot = link.getNodeManager().getSuperRoot();
         Objects.getDaemonThreadPool().execute(() -> {
-            receiver = new CMXNotifyReceiver(superRoot, cmxListennerAddress);
+            receiver = new CMXNotifyReceiver(superRoot, cmxListennerAddress, connected);
             try {
                 receiver.run();
             }
             catch(IOException ie) {}
         });
+    }
+
+    @Override
+    public void onResponderDisconnected(DSLink link){
+        LOGGER.info("Disconnected");
+        this.connected.set(false);
     }
 }

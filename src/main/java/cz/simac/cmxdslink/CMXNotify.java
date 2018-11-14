@@ -69,9 +69,8 @@ public class CMXNotify
         catch(ParseException pe){
             return null;
         }
-        CMXNotify[] outArray = new CMXNotify[list.size()];
-        list.toArray(outArray);
-        return outArray;
+
+        return list.toArray(new CMXNotify[list.size()]);
     }
 
     public void update(Node rootNode){
