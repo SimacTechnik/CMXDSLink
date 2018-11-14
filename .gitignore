@@ -4,9 +4,12 @@
 # Log file
 *.log
 
-IntelliJ files
+# IntelliJ files
 *.iml
 .idea
+
+# Gradle tmp folder
+.gradle
 
 # BlueJ files
 *.ctxt
