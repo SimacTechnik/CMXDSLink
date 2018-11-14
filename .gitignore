@@ -10,7 +10,6 @@
 
 # Gradle tmp folder
 .gradle
-!gradle/wrapper/gradle-wrapper.jar
 
 # BlueJ files
 *.ctxt
@@ -20,6 +19,8 @@
 
 # Package Files #
 *.jar
+## exception
+!gradle/**/*.jar
 *.war
 *.nar
 *.ear

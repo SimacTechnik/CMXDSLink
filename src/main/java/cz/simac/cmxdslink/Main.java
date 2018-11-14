@@ -4,6 +4,9 @@ import org.apache.commons.cli.*;
 import org.dsa.iot.dslink.DSLinkFactory;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
 
@@ -48,7 +51,12 @@ public class Main {
         if (socket.isUnresolved()) {
             socket = new InetSocketAddress(DEFAULT_IP, DEFAULT_PORT);
         }
-        DSLinkFactory.start(args, new CMXDSLink(socket));
+        List<String> argsList = cl.getArgList();
+        argsList.remove("ip");
+        argsList.remove("i");
+        argsList.remove("port");
+        argsList.remove("p");
+        DSLinkFactory.start(argsList.toArray(new String[0]), new CMXDSLink(socket));
         if (options.hasOption("help")){
             printHelp(ipOpt);
             printHelp(portOpt);
