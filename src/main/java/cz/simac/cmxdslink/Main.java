@@ -17,9 +17,12 @@ public class Main {
         ipOpt.setRequired(false);
         Option portOpt = new Option("p", "port", true, "Port where should be HTTPS Server listen to CMX Notifications");
         portOpt.setRequired(false);
+        Option helpOpt = new Option("h", "help", false, "Prints this help");
+        helpOpt.setRequired(false);
         Options options = new Options();
         options.addOption(ipOpt);
         options.addOption(portOpt);
+        options.addOption(helpOpt);
         CommandLine cl = null;
         try {
             cl = parser.parse(options, args);
@@ -27,13 +30,13 @@ public class Main {
         }
         String networkAddress = DEFAULT_IP;
         int port = DEFAULT_PORT;
-        if (cl.hasOption("port")) {
+        if (cl != null && cl.hasOption("port")) {
             try {
                 port = Integer.parseInt(cl.getOptionValue("port"));
             } catch (NumberFormatException ignore) {
             }
         }
-        if (cl.hasOption("ip")) {
+        if (cl != null && cl.hasOption("ip")) {
             networkAddress = cl.getOptionValue("ip");
         }
         InetSocketAddress socket;
@@ -46,5 +49,14 @@ public class Main {
             socket = new InetSocketAddress(DEFAULT_IP, DEFAULT_PORT);
         }
         DSLinkFactory.start(args, new CMXDSLink(socket));
+        if (options.hasOption("help")){
+            printHelp(ipOpt);
+            printHelp(portOpt);
+        }
+    }
+
+    private static void printHelp(Option opt){
+        System.out.println("    --"+opt.getLongOpt()+", -"+opt.getOpt());
+        System.out.println("      "+opt.getDescription());
     }
 }
