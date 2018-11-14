@@ -1,31 +1,31 @@
 package cz.simac.cmxdslink;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import org.dsa.iot.dslink.node.Node;
 import org.dsa.iot.dslink.node.NodeBuilder;
 import org.dsa.iot.dslink.node.value.Value;
 import org.dsa.iot.dslink.node.value.ValueType;
-import org.dsa.iot.dslink.util.json.JsonObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class CMXNotify
-{
-    public CMXNotify(){
+public class CMXNotify {
+    public String deviceId;
+    public String username;
+    public Boolean associated;
+    public String locationMapHierarchy;
+    public Number timestamp;
+    public String manufacturer;
+    public String apMacAddress;
+    public String band;
+    public CMXNotify() {
 
     }
-
     //copy constructor
-    public CMXNotify(CMXNotify notify){
+    public CMXNotify(CMXNotify notify) {
         this.deviceId = notify.deviceId;
         this.username = notify.username;
         this.associated = notify.associated;
@@ -36,49 +36,37 @@ public class CMXNotify
         this.band = notify.band;
     }
 
-    public String deviceId;
-    public String username;
-    public Boolean associated;
-    public String locationMapHierarchy;
-    public Number timestamp;
-    public String manufacturer;
-    public String apMacAddress;
-    public String band;
-
-
-    public static CMXNotify[] encodeJSON(String data){
+    public static CMXNotify[] encodeJSON(String data) {
         JSONParser parser = new JSONParser();
         List<CMXNotify> list = new ArrayList<>();
         try {
-            final JSONObject jsonObject = (JSONObject)parser.parse(data);
+            final JSONObject jsonObject = (JSONObject) parser.parse(data);
             //CMX notifications are always in array with key "notifications"
-            final JSONArray jsonArray = (JSONArray)jsonObject.get("notifications");
+            final JSONArray jsonArray = (JSONArray) jsonObject.get("notifications");
             //if JSON was correctly parsed, but does not contains key 'notifications'
-            if(jsonArray == null)
+            if (jsonArray == null)
                 return null;
-            for(Object obj : jsonArray){
+            for (Object obj : jsonArray) {
                 JSONObject jObj = (JSONObject) obj;
-                list.add(new CMXNotify()
-                {{
-                    deviceId = (String)jObj.get("deviceId");
-                    username = (String)jObj.get("username");
+                list.add(new CMXNotify() {{
+                    deviceId = (String) jObj.get("deviceId");
+                    username = (String) jObj.get("username");
                     associated = (Boolean) jObj.get("associated");
-                    locationMapHierarchy = (String)jObj.get("locationMapHierarchy");
+                    locationMapHierarchy = (String) jObj.get("locationMapHierarchy");
                     timestamp = (Number) jObj.get("timestamp");
-                    manufacturer = (String)jObj.get("manufacturer");
-                    apMacAddress = (String)jObj.get("apMacAddress");
-                    band = (String)jObj.get("band");
+                    manufacturer = (String) jObj.get("manufacturer");
+                    apMacAddress = (String) jObj.get("apMacAddress");
+                    band = (String) jObj.get("band");
                 }});
             }
-        }
-        catch(ParseException pe){
+        } catch (ParseException pe) {
             return null;
         }
 
         return list.toArray(new CMXNotify[list.size()]);
     }
 
-    public void update(Node rootNode){
+    public void update(Node rootNode) {
         // System.out.println("in update() method");
         Node node = getOrCreate(rootNode, deviceId)
                 .setDisplayName(deviceId)
@@ -100,7 +88,7 @@ public class CMXNotify
 
     private void createNodeChild(Node node, String name, String value) {
         // System.out.println("in createNodeChild for string value: " + value + " method");
-        if(value == null) return;
+        if (value == null) return;
         Node n = getOrCreate(node, name)
                 .setDisplayName(name)
                 .setSerializable(true)
@@ -112,7 +100,7 @@ public class CMXNotify
 
     private void createNodeChild(Node node, String name, Number value) {
         // System.out.println("in createNodeChild for number value: "+value.toString()+" method");
-        if(value == null) return;
+        if (value == null) return;
         Node n = getOrCreate(node, name)
                 .setDisplayName(name)
                 .setSerializable(false)
@@ -124,7 +112,7 @@ public class CMXNotify
 
     private void createNodeChild(Node node, String name, Boolean value) {
         // System.out.println("in createNodeChild for boolean value: "+value.toString()+" method");
-        if(value == null) return;
+        if (value == null) return;
         Node n = getOrCreate(node, name)
                 .setDisplayName(name)
                 .setSerializable(false)
@@ -135,9 +123,9 @@ public class CMXNotify
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "[CMXNotify object] {" +
-                "deviceId: " + deviceId + ", "+
+                "deviceId: " + deviceId + ", " +
                 "username: " + username + ", " +
                 "associated: " + associated.toString() + ", " +
                 "locationMapHierarchy: " + locationMapHierarchy + ", " +
@@ -147,14 +135,13 @@ public class CMXNotify
                 "band: " + band + '}';
     }
 
-    private NodeBuilder getOrCreate(Node node, String name){
+    private NodeBuilder getOrCreate(Node node, String name) {
         // System.out.println("in getOrCreate() method");
         Node child = node.getChild(name, true);
-        if(child == null) {
+        if (child == null) {
             // System.out.println("creating new child");
             return node.createChild(name, true);
-        }
-        else {
+        } else {
             // System.out.println("creating fake builder");
             return child.createFakeBuilder();
         }

@@ -4,35 +4,27 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.dsa.iot.dslink.node.Node;
-import org.dsa.iot.dslink.node.value.Value;
-import org.dsa.iot.dslink.node.value.ValueType;
-import org.dsa.iot.dslink.util.json.JsonObject;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class CMXNotifyReceiver {
 
-    private Node rootNode;
-
-    private InetSocketAddress address;
-
-    private HttpServer server;
-
     private final Object notification;
-
+    private Node rootNode;
+    private InetSocketAddress address;
+    private HttpServer server;
     private CMXHandler cmxHandler;
 
     private AtomicBoolean connected;
 
-    public CMXNotifyReceiver(Node rootNode, InetSocketAddress address, AtomicBoolean connected){
+    public CMXNotifyReceiver(Node rootNode, InetSocketAddress address, AtomicBoolean connected) {
         this.rootNode = rootNode;
         this.address = address;
         this.notification = new Object();
@@ -45,25 +37,25 @@ public class CMXNotifyReceiver {
         server = HttpServer.create(address, 0);
         server.createContext("/", this.cmxHandler);
         server.start();
-        while(!connected.get()) {
+        while (!connected.get()) {
             Thread.yield();
         }
         while (connected.get()) {
-            try{
+            try {
                 CMXNotify[] tmpArray;
-                synchronized (notification){
+                synchronized (notification) {
                     notification.wait();
                     tmpArray = cmxHandler.getNotify();
                     notification.notify();
                 }
-                for(CMXNotify tmp : tmpArray)
+                for (CMXNotify tmp : tmpArray)
                     addNotify(tmp);
+            } catch (InterruptedException ignore) {
             }
-            catch(InterruptedException ignore){ }
         }
     }
 
-    private void addNotify(CMXNotify notify){
+    private void addNotify(CMXNotify notify) {
         // System.out.println("In addNotify() method");
         notify.update(rootNode);
     }
@@ -74,7 +66,7 @@ public class CMXNotifyReceiver {
 
         private List<CMXNotify> notify = new ArrayList<>();
 
-        private CMXHandler(Object notification){
+        private CMXHandler(Object notification) {
             this.notification = notification;
         }
 
@@ -85,17 +77,17 @@ public class CMXNotifyReceiver {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))) {
                 data = br.lines().collect(Collectors.joining(System.lineSeparator()));
             }
-            synchronized(notification){
-                if(data != null) {
+            synchronized (notification) {
+                if (data != null) {
                     encoded = CMXNotify.encodeJSON(data);
-                    if(encoded != null)
+                    if (encoded != null)
                         notify.addAll(Arrays.asList(encoded));
                 }
                 notification.notify();
-                try{
+                try {
                     notification.wait(1000);
+                } catch (InterruptedException ignore) {
                 }
-                catch(InterruptedException ignore){}
             }
             String response = "";
             t.sendResponseHeaders(encoded == null ? 400 : 200, response.length());
@@ -104,7 +96,7 @@ public class CMXNotifyReceiver {
             os.close();
         }
 
-        private CMXNotify[] getNotify(){
+        private CMXNotify[] getNotify() {
             CMXNotify[] tmp = notify.toArray(new CMXNotify[0]);
             notify.clear();
             return tmp;
