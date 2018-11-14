@@ -41,7 +41,7 @@ public class CMXNotifyReceiver {
     }
 
     public void run() throws IOException {
-        System.out.println("in run() method");
+        // System.out.println("in run() method");
         server = HttpServer.create(address, 0);
         server.createContext("/", this.cmxHandler);
         server.start();
@@ -64,7 +64,7 @@ public class CMXNotifyReceiver {
     }
 
     private void addNotify(CMXNotify notify){
-        System.out.println("In addNotify() method");
+        // System.out.println("In addNotify() method");
         notify.update(rootNode);
     }
 
