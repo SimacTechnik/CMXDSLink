@@ -7,7 +7,7 @@
 		"name": "Lukáš Hruška",
 		"email": "lukyhruska96@gmail.com"
 	},
-	"main": "run.sh",
+	"main": "bin/CMXDSLink",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SimacTechnik/CMXDSLink"
