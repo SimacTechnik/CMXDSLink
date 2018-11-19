@@ -42,7 +42,7 @@ public class LocationUpdateNotification implements CMXNotification {
 
     @Override
     public Node createNode() {
-        CMXDSLink.LOGGER.trace("In LocationUpdateNotification::createNode() method");
+        CMXDSLink.LOGGER.debug("In LocationUpdateNotification::createNode() method");
         Node n = new Node(getDeviceId(), null, null, true);
         n.setDisplayName(getDeviceId());
         NotificationUtils.createNode(n, "deviceId", deviceId);

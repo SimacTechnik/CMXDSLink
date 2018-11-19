@@ -25,24 +25,24 @@ public class CMXNotifyReceiver {
     private HttpServer server;
 
     public CMXNotifyReceiver(InetSocketAddress address) {
-        CMXDSLink.LOGGER.trace("In CMXNotifyReceiver(InetSocketAddress address) ctor");
+        CMXDSLink.LOGGER.debug("In CMXNotifyReceiver(InetSocketAddress address) ctor");
         this.address = address;
     }
 
     public void run() throws IOException {
-        CMXDSLink.LOGGER.trace("In run() method");
+        CMXDSLink.LOGGER.debug("In run() method");
         server = HttpServer.create(address, 0);
         server.start();
     }
 
     public HttpContext addContext(String path, Node parentNode, CMXTypes type) {
-        CMXDSLink.LOGGER.trace("In addContext(String path: "+path+", Node parentNode: "+
+        CMXDSLink.LOGGER.debug("In addContext(String path: "+path+", Node parentNode: "+
                 parentNode.getDisplayName()+", CMXTypes type: "+type.toString()+") method");
         return server.createContext(path, new CMXHandler(parentNode, type));
     }
 
     public void removeContext(String path) {
-        CMXDSLink.LOGGER.trace("In removeContext(String path: "+path+") method");
+        CMXDSLink.LOGGER.debug("In removeContext(String path: "+path+") method");
         server.removeContext(path);
     }
 
@@ -53,25 +53,25 @@ public class CMXNotifyReceiver {
         private final CMXTypes type;
 
         private CMXHandler(Node parentNode, CMXTypes type) {
-            CMXDSLink.LOGGER.trace("In CMXHandler(Node parentNode: "+parentNode.getDisplayName() +
+            CMXDSLink.LOGGER.debug("In CMXHandler(Node parentNode: "+parentNode.getDisplayName() +
                     ", CMXTypes type: "+type.toString()+") ctor");
             this.manager = new CMXNotificationManager(parentNode, type);
             this.type = type;
         }
 
         public void handle(HttpExchange t) throws IOException {
-            CMXDSLink.LOGGER.trace("In handle(HttpExchange t) method");
+            CMXDSLink.LOGGER.debug("In handle(HttpExchange t) method");
             InputStream is = t.getRequestBody();
             String data;
             // reading data stream from http request
             try (BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))) {
                 data = br.lines().collect(Collectors.joining(System.lineSeparator()));
             }
-            CMXDSLink.LOGGER.trace("data: "+data);
+            CMXDSLink.LOGGER.debug("data: "+data);
             // encoding data, then notifying listenner to proccess new data and waiting for him to process them
             List<CMXNotification> notifications = Arrays.asList(CMXNotificationParser.Encode(data));
             Boolean nullOrType = notifications.stream().anyMatch(a -> a == null || a.getType() != type);
-            CMXDSLink.LOGGER.trace("nullOrType: "+nullOrType.toString());
+            CMXDSLink.LOGGER.debug("nullOrType: "+nullOrType.toString());
             if(!nullOrType) {
                 notifications.stream().forEach(manager::update);
             }

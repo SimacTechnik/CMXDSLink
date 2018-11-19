@@ -68,7 +68,7 @@ public class CMXDSLink extends DSLinkHandler {
     }
 
     private void makeAddCMX() {
-        LOGGER.trace("in makeAddCMX() method");
+        LOGGER.debug("in makeAddCMX() method");
         Action act = new Action(Permission.READ, event -> handleAddCMX(event));
         act.addParameter(new Parameter(CMXConstants.NAME, ValueType.STRING, new Value("")));
         act.addParameter(new Parameter(CMXConstants.TYPE, CMXConstants.NOTIFICATION_TYPE, new Value(CMXConstants.NOTIFICATION_TYPE.getEnums().toArray(new String[0])[0])));
@@ -79,13 +79,13 @@ public class CMXDSLink extends DSLinkHandler {
     }
 
     private void handleAddCMX(ActionResult event) {
-        LOGGER.trace("in handleAddCMX(ActionResult event) method");
+        LOGGER.debug("in handleAddCMX(ActionResult event) method");
         // get parameter values
         String name = event.getParameter(CMXConstants.NAME).getString();
         String type = event.getParameter(CMXConstants.TYPE).getString();
         String path = event.getParameter(CMXConstants.URL).getString();
 
-        LOGGER.trace("name: " + name + "; type: " + type + "; path: " + path);
+        LOGGER.debug("name: " + name + "; type: " + type + "; path: " + path);
         // duplicity handling of context path
         if(!contexts.containsKey(path)) {
             // duplicity handling of context name
@@ -93,21 +93,21 @@ public class CMXDSLink extends DSLinkHandler {
                 if(nodeContext.getDisplayName().equals(name)) return;
             }
 
-            LOGGER.trace("New CMX's parameters are OK");
+            LOGGER.debug("New CMX's parameters are OK");
 
             //convert parameter enum to CMXTypes enum
             CMXTypes cmxType;
             switch(type) {
                 case CMXConstants.ASSOCIATION:
-                    LOGGER.trace("ASSOCIATION type");
+                    LOGGER.debug("ASSOCIATION type");
                     cmxType = CMXTypes.ASSOCIATION;
                     break;
                 case CMXConstants.LOCATION_UPDATE:
-                    LOGGER.trace("LOCATION_UPDATE type");
+                    LOGGER.debug("LOCATION_UPDATE type");
                     cmxType = CMXTypes.LOCATION_UPDATE;
                     break;
                 case CMXConstants.MOVEMENT:
-                    LOGGER.trace("MOVEMENT type");
+                    LOGGER.debug("MOVEMENT type");
                     cmxType = CMXTypes.MOVEMENT;
                     break;
                 default:
