@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CMXDSLink extends DSLinkHandler {
 
-    private static final Logger LOGGER =
+    public static final Logger LOGGER =
             LoggerFactory.getLogger(CMXDSLink.class);
 
     private Node superRoot;
@@ -68,6 +68,7 @@ public class CMXDSLink extends DSLinkHandler {
     }
 
     private void makeAddCMX() {
+        LOGGER.trace("in makeAddCMX() method");
         Action act = new Action(Permission.READ, event -> handleAddCMX(event));
         act.addParameter(new Parameter(CMXConstants.NAME, ValueType.STRING, new Value("")));
         act.addParameter(new Parameter(CMXConstants.TYPE, CMXConstants.NOTIFICATION_TYPE, new Value(CMXConstants.NOTIFICATION_TYPE.getEnums().toArray(new String[0])[0])));
@@ -78,10 +79,13 @@ public class CMXDSLink extends DSLinkHandler {
     }
 
     private void handleAddCMX(ActionResult event) {
+        LOGGER.trace("in handleAddCMX(ActionResult event) method");
         // get parameter values
         String name = event.getParameter(CMXConstants.NAME).getString();
         String type = event.getParameter(CMXConstants.TYPE).getString();
         String path = event.getParameter(CMXConstants.URL).getString();
+
+        LOGGER.trace("name: " + name + "; type: " + type + "; path: " + path);
         // duplicity handling of context path
         if(!contexts.containsKey(path)) {
             // duplicity handling of context name
@@ -89,16 +93,21 @@ public class CMXDSLink extends DSLinkHandler {
                 if(nodeContext.getDisplayName().equals(name)) return;
             }
 
+            LOGGER.trace("New CMX's parameters are OK");
+
             //convert parameter enum to CMXTypes enum
             CMXTypes cmxType;
             switch(type) {
                 case CMXConstants.ASSOCIATION:
+                    LOGGER.trace("ASSOCIATION type");
                     cmxType = CMXTypes.ASSOCIATION;
                     break;
                 case CMXConstants.LOCATION_UPDATE:
+                    LOGGER.trace("LOCATION_UPDATE type");
                     cmxType = CMXTypes.LOCATION_UPDATE;
                     break;
                 case CMXConstants.MOVEMENT:
+                    LOGGER.trace("MOVEMENT type");
                     cmxType = CMXTypes.MOVEMENT;
                     break;
                 default:
@@ -123,6 +132,7 @@ public class CMXDSLink extends DSLinkHandler {
             Node anode = parentNode.getChild(CMXConstants.RM_CMX_RECEIVER, true);
             if (anode == null) parentNode.createChild(CMXConstants.RM_CMX_RECEIVER, true).setAction(act).build().setSerializable(false);
             else anode.setAction(act);
+            LOGGER.info("Created new CMX listener (" + name + ", " + type + ", " + path + ")");
             receiver.addContext(path, parentNode, cmxType);
         }
     }

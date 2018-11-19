@@ -10,8 +10,9 @@ public interface CMXConstants {
     String TYPE = "Type";
     String URL = "URL";
     String RM_CMX_RECEIVER = "Remove CMX Receiver";
-    String ADD_CMX_RECEIVER = "Remove CMX Receiver";
+    String ADD_CMX_RECEIVER = "Add CMX Receiver";
     String GROUP_BY = "Group by";
+    String DEVICE_ID = "deviceId";
     ValueType NOTIFICATION_TYPE = ValueType.makeEnum(
             ASSOCIATION,
             LOCATION_UPDATE,

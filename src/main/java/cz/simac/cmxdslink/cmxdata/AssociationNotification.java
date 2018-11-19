@@ -1,5 +1,6 @@
 package cz.simac.cmxdslink.cmxdata;
 
+import cz.simac.cmxdslink.CMXDSLink;
 import org.dsa.iot.dslink.node.Node;
 import org.dsa.iot.dslink.node.NodeBuilder;
 import org.dsa.iot.dslink.util.json.JsonArray;
@@ -36,6 +37,7 @@ public class AssociationNotification implements CMXNotification {
 
     @Override
     public Node createNode() {
+        CMXDSLink.LOGGER.trace("In AssociationNotification::createNode() method");
         Node n = new Node(getDeviceId(), null, null, true);
         n.setDisplayName(getDeviceId());
         NotificationUtils.createNode(n, "deviceId", deviceId);

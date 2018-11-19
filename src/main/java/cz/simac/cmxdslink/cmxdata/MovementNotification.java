@@ -1,5 +1,6 @@
 package cz.simac.cmxdslink.cmxdata;
 
+import cz.simac.cmxdslink.CMXDSLink;
 import org.dsa.iot.dslink.node.Node;
 
 public class MovementNotification implements CMXNotification {
@@ -36,6 +37,7 @@ public class MovementNotification implements CMXNotification {
 
     @Override
     public Node createNode() {
+        CMXDSLink.LOGGER.trace("In MovementNotification::createNode() method");
         Node n = new Node(getDeviceId(), null, null, true);
         n.setDisplayName(getDeviceId());
         NotificationUtils.createNode(n, "deviceId", deviceId);

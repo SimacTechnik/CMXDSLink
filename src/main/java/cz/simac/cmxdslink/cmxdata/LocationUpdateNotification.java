@@ -1,5 +1,6 @@
 package cz.simac.cmxdslink.cmxdata;
 
+import cz.simac.cmxdslink.CMXDSLink;
 import org.dsa.iot.dslink.node.Node;
 
 public class LocationUpdateNotification implements CMXNotification {
@@ -41,6 +42,7 @@ public class LocationUpdateNotification implements CMXNotification {
 
     @Override
     public Node createNode() {
+        CMXDSLink.LOGGER.trace("In LocationUpdateNotification::createNode() method");
         Node n = new Node(getDeviceId(), null, null, true);
         n.setDisplayName(getDeviceId());
         NotificationUtils.createNode(n, "deviceId", deviceId);
