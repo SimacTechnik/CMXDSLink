@@ -53,6 +53,7 @@ public class AssociationNotification implements CMXNotification {
         NotificationUtils.createNode(n, "eventId", eventId);
         NotificationUtils.createNode(n, "association", association);
         n.setMetaData(this);
+        n.setSerializable(false);
         return n;
     }
 }

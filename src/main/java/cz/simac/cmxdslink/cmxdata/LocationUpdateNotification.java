@@ -69,6 +69,7 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "floorId", floorId);
         n.addChild(locationCoordinate.createNode("locationCoordinate"));
         n.setMetaData(this);
+        n.setSerializable(false);
         return n;
     }
 }

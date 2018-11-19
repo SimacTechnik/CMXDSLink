@@ -1,7 +1,6 @@
 package cz.simac.cmxdslink.cmxdata;
 
 import org.dsa.iot.dslink.node.Node;
-import sun.management.snmp.jvminstr.NotificationTargetImpl;
 
 public class GeoCoordinate {
     public Number latitude;

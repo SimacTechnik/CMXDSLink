@@ -59,6 +59,7 @@ public class MovementNotification implements CMXNotification {
         NotificationUtils.createNode(n, "ipAddress", ipAddress);
         NotificationUtils.createNode(n, "entity", entity);
         n.setMetaData(this);
+        n.setSerializable(false);
         return n;
     }
 }

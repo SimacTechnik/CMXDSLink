@@ -12,21 +12,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CMXNotificationParser {
-    private Field[] associationFields;
-    private Field[] locationUpdateFields;
-    private Field[] movementFields;
+    private static Field[] associationFields = filterPublicFields(AssociationNotification.class.getDeclaredFields());
+    private static Field[] locationUpdateFields = filterPublicFields(LocationUpdateNotification.class.getDeclaredFields());
+    private static Field[] movementFields = filterPublicFields(MovementNotification.class.getDeclaredFields());
 
-    public CMXNotificationParser(){
-        associationFields = AssociationNotification.class.getDeclaredFields();
-        locationUpdateFields = LocationUpdateNotification.class.getDeclaredFields();
-        movementFields = MovementNotification.class.getDeclaredFields();
-    }
-
-    private Field[] filterPublicFields(Field[] fields){
+    private static Field[] filterPublicFields(Field[] fields){
         return Arrays.asList(fields).stream().filter(f -> Modifier.isPublic(f.getModifiers())).toArray(Field[]::new);
     }
 
-    public CMXNotification[] Encode(String data){
+    public static CMXNotification[] Encode(String data){
         List<CMXNotification> list = new ArrayList<>();
         JsonArray array = Parse(data);
         if(array == null)
@@ -64,7 +58,7 @@ public class CMXNotificationParser {
         return list.toArray(new CMXNotification[0]);
     }
 
-    private JsonArray Parse(String data){
+    private static JsonArray Parse(String data){
         JSONParser parser = new JSONParser();
         try {
             final JsonObject jsonObject = (JsonObject) parser.parse(data);
