@@ -1,8 +1,8 @@
 package cz.simac.cmxdslink.cmxdata;
 
 import cz.simac.cmxdslink.CMXDSLink;
-import org.dsa.iot.dslink.util.json.JsonArray;
-import org.dsa.iot.dslink.util.json.JsonObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -25,7 +25,7 @@ public class CMXNotificationParser {
     public static CMXNotification[] Encode(String data){
         CMXDSLink.LOGGER.debug("In Encode(String data) method");
         List<CMXNotification> list = new ArrayList<>();
-        JsonArray array = Parse(data);
+        JSONArray array = Parse(data);
         if(array == null) {
             CMXDSLink.LOGGER.debug("array == null");
             CMXDSLink.LOGGER.debug("leaving Encode method with null object");
@@ -33,13 +33,13 @@ public class CMXNotificationParser {
         }
         CMXDSLink.LOGGER.debug("enumerating jObjects");
         for(Object obj : array){
-            JsonObject jObj = (JsonObject)obj;
-            if(!jObj.contains("notificationType")) {
+            JSONObject jObj = (JSONObject)obj;
+            if(!jObj.containsKey("notificationType")) {
                 CMXDSLink.LOGGER.debug("doesn't contain notificationType key");
                 CMXDSLink.LOGGER.debug("leaving Encode method with null object");
                 return null;
             }
-            String type = jObj.get("notificationType");
+            String type = (String) jObj.get("notificationType");
             CMXNotification notification = null;
             Field[] useFields = null;
             CMXDSLink.LOGGER.debug("switch(type)");
@@ -79,17 +79,16 @@ public class CMXNotificationParser {
         return list.toArray(new CMXNotification[0]);
     }
 
-    private static JsonArray Parse(String data){
+    private static JSONArray Parse(String data){
         CMXDSLink.LOGGER.debug("In Parse(String data) method");
         JSONParser parser = new JSONParser();
         try {
             CMXDSLink.LOGGER.debug("parsing data");
-            final JsonObject jsonObject = (JsonObject) parser.parse(data);
+            final JSONObject jsonObject = (JSONObject) parser.parse(data);
             CMXDSLink.LOGGER.debug("getting notifications");
             //CMX notifications are always in array with key "notifications"
-            return (JsonArray) jsonObject.get("notifications");
-        } catch (Exception pe) {
-            System.out.println(pe.getMessage());
+            return (JSONArray) jsonObject.get("notifications");
+        } catch (ParseException pe) {
             CMXDSLink.LOGGER.debug("returning null");
             return null;
         }
