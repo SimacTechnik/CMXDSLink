@@ -88,7 +88,8 @@ public class CMXNotificationParser {
             CMXDSLink.LOGGER.debug("getting notifications");
             //CMX notifications are always in array with key "notifications"
             return (JsonArray) jsonObject.get("notifications");
-        } catch (ParseException pe) {
+        } catch (Exception pe) {
+            System.out.println(pe.getMessage());
             CMXDSLink.LOGGER.debug("returning null");
             return null;
         }
