@@ -83,6 +83,7 @@ public class CMXNotificationParser {
         CMXDSLink.LOGGER.debug("In Parse(String data) method");
         JSONParser parser = new JSONParser();
         try {
+            CMXDSLink.LOGGER.debug("parsing data");
             final JsonObject jsonObject = (JsonObject) parser.parse(data);
             CMXDSLink.LOGGER.debug("getting notifications");
             //CMX notifications are always in array with key "notifications"
