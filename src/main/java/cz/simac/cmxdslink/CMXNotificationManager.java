@@ -94,14 +94,14 @@ public class CMXNotificationManager {
             for (Node node : data.values()) {
                 if (groupBy == null) {
                     CMXDSLink.LOGGER.debug("groupBy == null");
-                    rootNode.addChild(node);
+                    NotificationUtils.addChild(rootNode, node);
                 } else {
                     CMXDSLink.LOGGER.debug("groupBy == " + groupBy.getName());
                     String key = groupBy.get(node).toString();
-                    getOrCreate(rootNode, key)
+                    Node parent = getOrCreate(rootNode, key)
                             .setDisplayName(key)
-                            .build()
-                            .addChild(node);
+                            .build();
+                    NotificationUtils.addChild(parent, node);
                 }
             }
         } catch (IllegalAccessException ignore) {}
@@ -142,7 +142,7 @@ public class CMXNotificationManager {
         CMXDSLink.LOGGER.debug("creating nodes");
         // create new node
         Node node = notification.createNode();
-        rootNode.addChild(node);
+        NotificationUtils.addChild(rootNode, node);
         data.put(notification.getDeviceId(), node);
         CMXDSLink.LOGGER.debug("succesfully created nodes");
     }

@@ -50,7 +50,7 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "entity", entity);
         NotificationUtils.createNode(n, "band", band);
         if(geoCoordinate != null) {
-            n.addChild(geoCoordinate.createNode("geoCoordinate"));
+            NotificationUtils.addChild(n, geoCoordinate.createNode("geoCoordinate"));
         }
         NotificationUtils.createNode(n, "notificationType", notificationType);
         NotificationUtils.createNode(n, "ipAddress", ipAddress);
@@ -62,10 +62,10 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "eventId", eventId);
         NotificationUtils.createNode(n, "manufacturer", manufacturer);
         if(maxDetectedRssi != null)
-            n.addChild(maxDetectedRssi.createNode("maxDetectedRssi"));
+            NotificationUtils.addChild(n, maxDetectedRssi.createNode("maxDetectedRssi"));
         NotificationUtils.createNode(n, "ssid", ssid);
         if(rawLocation != null)
-            n.addChild(rawLocation.createNode("rawLocation"));
+            NotificationUtils.addChild(n, rawLocation.createNode("rawLocation"));
         NotificationUtils.createNode(n, "locComputeType", locComputeType);
         NotificationUtils.createNode(n, "subscriptionName", subscriptionName);
         NotificationUtils.createNode(n, "associated", associated);
@@ -75,7 +75,7 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "confidenceFactor", confidenceFactor);
         NotificationUtils.createNode(n, "floorId", floorId);
         if(locationCoordinate != null)
-            n.addChild(locationCoordinate.createNode("locationCoordinate"));
+            NotificationUtils.addChild(n, locationCoordinate.createNode("locationCoordinate"));
         n.setMetaData(this);
         n.setSerializable(false);
         return n;

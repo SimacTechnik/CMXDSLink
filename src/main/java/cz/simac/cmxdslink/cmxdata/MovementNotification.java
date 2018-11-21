@@ -2,6 +2,7 @@ package cz.simac.cmxdslink.cmxdata;
 
 import cz.simac.cmxdslink.CMXDSLink;
 import org.dsa.iot.dslink.node.Node;
+import org.dsa.iot.dslink.util.NodeUtils;
 
 public class MovementNotification implements CMXNotification {
     public Number confidenceFactor;
@@ -45,10 +46,10 @@ public class MovementNotification implements CMXNotification {
         NotificationUtils.createNode(n, "floorId", floorId);
         NotificationUtils.createNode(n, "lastSeen", lastSeen);
         if(geoGeoCoordinate != null)
-            n.addChild(geoGeoCoordinate.createNode("geoGeoCoordinate"));
+            NotificationUtils.addChild(n, geoGeoCoordinate.createNode("geoGeoCoordinate"));
         NotificationUtils.createNode(n, "associated", associated);
         if(locationCoordinate != null)
-            n.addChild(locationCoordinate.createNode("locationCoordinate"));
+            NotificationUtils.addChild(n, locationCoordinate.createNode("locationCoordinate"));
         NotificationUtils.createNode(n, "eventId", eventId);
         NotificationUtils.createNode(n, "notificationType", notificationType);
         NotificationUtils.createNode(n, "moveDistanceInFt", moveDistanceInFt);
