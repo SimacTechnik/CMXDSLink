@@ -71,4 +71,14 @@ public class NotificationUtils {
     public static Node addChild(Node parent, Node child){
         return new NodeBuilder(parent, child).build();
     }
+
+    public static Node copyNode(Node parent, Node n) {
+        return CMXNotificationManager.getOrCreate(parent, n.getName())
+                .setDisplayName(n.getDisplayName())
+                .setSerializable(n.isSerializable())
+                .setValueType(n.getValueType())
+                .setValue(n.getValue())
+                .setHasChildren(n.getHasChildren())
+                .build();
+    }
 }
