@@ -128,7 +128,7 @@ public class CMXNotificationManager {
             Node n = data.get(notification.getDeviceId());
             // update every node in existing parent node
             for(Node node : notification.createNode().getChildren().values()){
-                getOrCreate(n, node.getName())
+                getOrCreate(n, node.getName().replace(":", ""))
                         .setDisplayName(n.getDisplayName())
                         .setValueType(n.getValueType())
                         .setValue(n.getValue())
