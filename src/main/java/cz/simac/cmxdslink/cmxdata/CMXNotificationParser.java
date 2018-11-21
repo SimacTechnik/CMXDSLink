@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -86,7 +87,16 @@ public class CMXNotificationParser {
                 }
                 else if(cls.isArray()) {
                     CMXDSLink.LOGGER.debug("array");
-                    f.set(obj, jObj.get(f.getName()));
+                    JSONArray arr = (JSONArray) jObj.get(f.getName());
+                    CMXDSLink.LOGGER.debug("got JSONArray");
+                    Object[] arrayObj = (Object[]) Array.newInstance(cls.getComponentType(), arr.size());
+                    CMXDSLink.LOGGER.debug("created new array of objects");
+                    for(int i = 0; i < arr.size(); i++) {
+                        arrayObj[i] = arr.get(i);
+                    }
+                    CMXDSLink.LOGGER.debug("assigned to array");
+                    f.set(obj, arrayObj);
+                    CMXDSLink.LOGGER.debug("set the obj");
                 }
                 else {
                     CMXDSLink.LOGGER.debug("object: "+cls.getName());
