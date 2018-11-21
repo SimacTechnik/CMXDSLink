@@ -64,6 +64,9 @@ public class CMXNotificationParser {
             }
             CMXDSLink.LOGGER.debug("setting fields of new object");
             FillFields(notification, useFields, jObj);
+            CMXDSLink.LOGGER.debug("fields set");
+            CMXDSLink.LOGGER.debug(notification == null ? "null" : notification.toString());
+
             if(notification == null) {
                 CMXDSLink.LOGGER.debug("notification == null");
                 CMXDSLink.LOGGER.debug("leaving Encode method with null object");

@@ -15,4 +15,14 @@ public class GeoCoordinate {
         NotificationUtils.createNode(n, "unit", unit);
         return n;
     }
+
+    @Override
+    public String toString(){
+        return "GeoCoordinate {\n"+
+                "latitude: " + latitude == null ? "null" : latitude.toString() + "\n" +
+                "longitude: " + longitude == null ? "null" : longitude.toString() + "\n" +
+                "unit: " + unit == null ? "null" : unit + "\n" +
+                "}";
+
+    }
 }
