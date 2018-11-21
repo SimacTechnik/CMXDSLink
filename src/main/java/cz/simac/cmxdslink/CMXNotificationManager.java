@@ -91,6 +91,9 @@ public class CMXNotificationManager {
         CMXDSLink.LOGGER.debug("In render() method");
         rootNode.clearChildren();
         Map<String, Node> tmp = new HashMap<>();
+        Node oldRootNode = rootNode;
+        rootNode = NotificationUtils.copyNode(oldRootNode.getParent(), oldRootNode);
+        oldRootNode.delete(true);
         try {
             for (Node node : data.values()) {
                 if (groupBy == null) {
