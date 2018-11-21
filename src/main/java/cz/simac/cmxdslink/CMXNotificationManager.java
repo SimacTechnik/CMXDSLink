@@ -136,6 +136,7 @@ public class CMXNotificationManager {
                         .build();
             }
             n.setMetaData(notification);
+            CMXDSLink.LOGGER.debug("succesfully updated nodes");
             return;
         }
         CMXDSLink.LOGGER.debug("creating nodes");
@@ -143,6 +144,7 @@ public class CMXNotificationManager {
         Node node = notification.createNode();
         rootNode.addChild(node);
         data.put(notification.getDeviceId(), node);
+        CMXDSLink.LOGGER.debug("succesfully created nodes");
     }
 
     private static NodeBuilder getOrCreate(Node parent, String name) {
