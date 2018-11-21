@@ -9,6 +9,8 @@ import java.util.Arrays;
 
 public class NotificationUtils {
     public static void createNode(Node parent, String name, String value) {
+        if(value == null)
+            return;
         parent.createChild(name, true)
                 .setDisplayName(name)
                 .setValueType(ValueType.STRING)
@@ -17,6 +19,8 @@ public class NotificationUtils {
     }
 
     public static void createNode(Node parent, String name, Number value) {
+        if(value == null)
+            return;
         parent.createChild(name, true)
                 .setDisplayName(name)
                 .setValueType(ValueType.NUMBER)
@@ -25,6 +29,8 @@ public class NotificationUtils {
     }
 
     public static void createNode(Node parent, String name, Boolean value) {
+        if(value == null)
+            return;
         parent.createChild(name, true)
                 .setDisplayName(name)
                 .setValueType(ValueType.BOOL)
@@ -33,6 +39,8 @@ public class NotificationUtils {
     }
 
     public static void createNode(Node parent, String name, String[] value) {
+        if(value == null)
+            return;
         JsonArray tmp = new JsonArray();
         tmp.addAll(0, Arrays.asList(value));
         parent.createChild(name, true)

@@ -48,7 +48,8 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "deviceId", deviceId);
         NotificationUtils.createNode(n, "entity", entity);
         NotificationUtils.createNode(n, "band", band);
-        n.addChild(geoCoordinate.createNode("geoCoordinate"));
+        if(geoCoordinate != null)
+            n.addChild(geoCoordinate.createNode("geoCoordinate"));
         NotificationUtils.createNode(n, "notificationType", notificationType);
         NotificationUtils.createNode(n, "ipAddress", ipAddress);
         NotificationUtils.createNode(n, "bleTagInfo", bleTagInfo);
@@ -58,9 +59,11 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "locationMapHierarchy", locationMapHierarchy);
         NotificationUtils.createNode(n, "eventId", eventId);
         NotificationUtils.createNode(n, "manufacturer", manufacturer);
-        n.addChild(maxDetectedRssi.createNode("maxDetectedRssi"));
+        if(maxDetectedRssi != null)
+            n.addChild(maxDetectedRssi.createNode("maxDetectedRssi"));
         NotificationUtils.createNode(n, "ssid", ssid);
-        n.addChild(rawLocation.createNode("rawLocation"));
+        if(rawLocation != null)
+            n.addChild(rawLocation.createNode("rawLocation"));
         NotificationUtils.createNode(n, "locComputeType", locComputeType);
         NotificationUtils.createNode(n, "subscriptionName", subscriptionName);
         NotificationUtils.createNode(n, "associated", associated);
@@ -69,7 +72,8 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "lastSeen", lastSeen);
         NotificationUtils.createNode(n, "confidenceFactor", confidenceFactor);
         NotificationUtils.createNode(n, "floorId", floorId);
-        n.addChild(locationCoordinate.createNode("locationCoordinate"));
+        if(locationCoordinate != null)
+            n.addChild(locationCoordinate.createNode("locationCoordinate"));
         n.setMetaData(this);
         n.setSerializable(false);
         return n;

@@ -44,9 +44,11 @@ public class MovementNotification implements CMXNotification {
         NotificationUtils.createNode(n, "confidenceFactor", confidenceFactor);
         NotificationUtils.createNode(n, "floorId", floorId);
         NotificationUtils.createNode(n, "lastSeen", lastSeen);
-        n.addChild(geoGeoCoordinate.createNode("geoGeoCoordinate"));
+        if(geoGeoCoordinate != null)
+            n.addChild(geoGeoCoordinate.createNode("geoGeoCoordinate"));
         NotificationUtils.createNode(n, "associated", associated);
-        n.addChild(locationCoordinate.createNode("locationCoordinate"));
+        if(locationCoordinate != null)
+            n.addChild(locationCoordinate.createNode("locationCoordinate"));
         NotificationUtils.createNode(n, "eventId", eventId);
         NotificationUtils.createNode(n, "notificationType", notificationType);
         NotificationUtils.createNode(n, "moveDistanceInFt", moveDistanceInFt);
