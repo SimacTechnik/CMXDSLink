@@ -86,10 +86,12 @@ public class CMXNotificationParser {
                 Class<?> cls = f.getType();
                 if(cls.isAssignableFrom(Number.class) || cls.isAssignableFrom(String.class) || cls.isAssignableFrom(Boolean.class)) {
                     CMXDSLink.LOGGER.debug("simple type");
+                    CMXDSLink.LOGGER.debug(cls.getName() + " " + f.getName() + " = " +jObj.get(f.getName()).toString() + " ("+jObj.get(f.getName()).getClass().getName()+")");
                     f.set(obj, jObj.get(f.getName()));
                 }
                 else if(cls.isArray()) {
                     CMXDSLink.LOGGER.debug("array");
+                    CMXDSLink.LOGGER.debug(cls.getName() + " " + f.getName() + " = " +jObj.get(f.getName()).toString() + " ("+jObj.get(f.getName()).getClass().getName()+")");
                     JSONArray arr = (JSONArray) jObj.get(f.getName());
                     CMXDSLink.LOGGER.debug("got JSONArray");
                     Object[] arrayObj = (Object[]) Array.newInstance(cls.getComponentType(), arr.size());

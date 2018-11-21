@@ -74,20 +74,4 @@ public class LocationUpdateNotification implements CMXNotification {
         n.setSerializable(false);
         return n;
     }
-
-    @Override
-    public String toString(){
-        return "LocationUpdateNotification {\n"+
-                "deviceId: " + deviceId == null ? "null" : deviceId + "\n" +
-                "entity: " + entity == null ? "null" : entity + "\n" +
-                "band: " + band == null ? "null" : band + "\n" +
-                "geoCoordinate: " + geoCoordinate == null ? "null" : geoCoordinate.toString() + "\n" +
-                "notificationType: " + notificationType == null ? "null" : notificationType + "\n" +
-                "ipAddress: " + ipAddress == null ? "null" : ipAddress.toString() + "\n" +
-                "bleTagInfo: " + bleTagInfo == null ? "null" : bleTagInfo + "\n" +
-                "floorRefId: " + floorRefId == null ? "null" : floorRefId + "\n" +
-                "apMacAddress: " + apMacAddress == null ? "null" : apMacAddress + "\n" +
-                "...\n"+
-                "}";
-    }
 }
