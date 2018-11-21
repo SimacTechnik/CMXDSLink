@@ -128,7 +128,21 @@ public class CMXNotificationManager {
     public void update(CMXNotification notification) {
         CMXDSLink.LOGGER.debug("In update(CMXNotification notification) method");
         // create/update node
-        Node node = notification.createNode(rootNode);
+        Node parent;
+        if(groupBy == null)
+            parent = rootNode;
+        else {
+            try {
+            String val = groupBy.get(notification).toString();
+            parent = getOrCreate(rootNode, val)
+                    .setDisplayName(val)
+                    .setSerializable(false)
+                    .build();
+            } catch(IllegalAccessException a) {
+                parent = rootNode;
+            }
+        }
+        Node node = notification.createNode(parent);
         data.put(notification.getDeviceId(), node);
         CMXDSLink.LOGGER.debug("succesfully created nodes");
     }
