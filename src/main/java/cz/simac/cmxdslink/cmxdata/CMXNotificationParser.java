@@ -86,7 +86,7 @@ public class CMXNotificationParser {
                 }
                 else if(cls.isArray()) {
                     CMXDSLink.LOGGER.debug("array");
-                    List tmp = (List)jObj.get(f.getName());
+                    JSONArray tmp = (JSONArray)jObj.get(f.getName());
                     f.set(obj, tmp.toArray());
                 }
                 else {
