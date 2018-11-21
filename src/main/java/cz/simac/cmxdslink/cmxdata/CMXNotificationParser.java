@@ -86,18 +86,22 @@ public class CMXNotificationParser {
                 Class<?> cls = f.getType();
                 if(cls.isAssignableFrom(Number.class) || cls.isAssignableFrom(String.class) || cls.isAssignableFrom(Boolean.class)) {
                     CMXDSLink.LOGGER.debug("simple type");
-                    CMXDSLink.LOGGER.debug(cls.getName() + " " + f.getName() + " = " +jObj.get(f.getName()) == null ? "null" : (jObj.get(f.getName()).toString() + " ("+jObj.get(f.getName()).getClass().getName()+")"));
+                    Object tmpObj = jObj.get(f.getName());
+                    if(tmpObj == null) {
+                        CMXDSLink.LOGGER.debug("null simple type");
+                        continue;
+                    }
+                    CMXDSLink.LOGGER.debug(cls.getName() + " " + f.getName() + " = " +jObj.get(f.getName()).toString() + " ("+jObj.get(f.getName()).getClass().getName()+")");
                     f.set(obj, jObj.get(f.getName()));
                 }
                 else if(cls.isArray()) {
                     CMXDSLink.LOGGER.debug("array");
-                    CMXDSLink.LOGGER.debug(cls.getName() + " " + f.getName() + " = " +jObj.get(f.getName()) == null ? "null" : (jObj.get(f.getName()).toString() + " ("+jObj.get(f.getName()).getClass().getName()+")"));
                     JSONArray arr = (JSONArray) jObj.get(f.getName());
                     if(arr == null) {
                         CMXDSLink.LOGGER.debug("null array");
                         continue;
                     }
-                    CMXDSLink.LOGGER.debug("got JSONArray");
+                    CMXDSLink.LOGGER.debug(cls.getName() + " " + f.getName() + " = " +arr.toString() + " ("+jObj.get(f.getName()).getClass().getName()+")");
                     Object[] arrayObj = (Object[]) Array.newInstance(cls.getComponentType(), arr.size());
                     CMXDSLink.LOGGER.debug("created new array of objects");
                     for(int i = 0; i < arr.size(); i++) {
