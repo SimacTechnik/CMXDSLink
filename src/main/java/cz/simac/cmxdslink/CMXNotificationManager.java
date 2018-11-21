@@ -112,7 +112,9 @@ public class CMXNotificationManager {
             data.values().forEach(a -> a.delete(true));
             data.clear();
             data = tmpData;
-        } catch (IllegalAccessException ignore) {}
+        } catch (IllegalAccessException ignore) {
+            CMXDSLink.LOGGER.debug("catched IllegalAccessException in render() method");
+        }
         CMXDSLink.LOGGER.debug("Leaving render() method");
     }
 
