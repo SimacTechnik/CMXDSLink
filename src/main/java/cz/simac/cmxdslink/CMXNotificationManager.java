@@ -89,7 +89,7 @@ public class CMXNotificationManager {
 
     private void render() {
         CMXDSLink.LOGGER.debug("In render() method");
-        rootNode.clearChildren();
+        rootNode.getChildren().values().forEach(a -> a.delete(true));
         try {
             for (Node node : data.values()) {
                 if (groupBy == null) {
