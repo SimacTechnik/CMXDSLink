@@ -89,12 +89,15 @@ public class CMXNotificationManager {
 
     private void render() {
         CMXDSLink.LOGGER.debug("In render() method");
-        rootNode.clearChildren();
         try {
+            Map<String, Node> tmpData = new HashMap<>();
             for (Node node : data.values()) {
+                CMXNotification notification = node.getMetaData();
+                CMXDSLink.LOGGER.debug("got MetaData from deviceId: "+notification.getDeviceId());
+                Node newNode;
                 if (groupBy == null) {
                     CMXDSLink.LOGGER.debug("groupBy == null");
-                    NotificationUtils.addChild(rootNode, node);
+                    newNode = notification.createNode(rootNode);
                 } else {
                     CMXDSLink.LOGGER.debug("groupBy == " + groupBy.getName());
                     String key = groupBy.get(node.getMetaData()).toString();
@@ -102,10 +105,15 @@ public class CMXNotificationManager {
                             .setDisplayName(key)
                             .setSerializable(false)
                             .build();
-                    NotificationUtils.addChild(parent, node);
+                    newNode = notification.createNode(parent);
                 }
+                tmpData.put(notification.getDeviceId(), newNode);
             }
+            data.values().forEach(a -> a.delete(true));
+            data.clear();
+            data = tmpData;
         } catch (IllegalAccessException ignore) {}
+        CMXDSLink.LOGGER.debug("Leaving render() method");
     }
 
     private void changeGroupBy(Field groupBy) {
