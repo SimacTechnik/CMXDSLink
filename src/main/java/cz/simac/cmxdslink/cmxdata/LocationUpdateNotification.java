@@ -1,6 +1,7 @@
 package cz.simac.cmxdslink.cmxdata;
 
 import cz.simac.cmxdslink.CMXDSLink;
+import cz.simac.cmxdslink.CMXNotificationManager;
 import org.dsa.iot.dslink.DSLink;
 import org.dsa.iot.dslink.node.Node;
 
@@ -42,15 +43,17 @@ public class LocationUpdateNotification implements CMXNotification {
     }
 
     @Override
-    public Node createNode() {
+    public Node createNode(Node parent) {
         CMXDSLink.LOGGER.debug("In LocationUpdateNotification::createNode() method");
-        Node n = new Node(getDeviceId(), null, NotificationUtils.link, true);
-        n.setDisplayName(getDeviceId());
+        Node n = CMXNotificationManager.getOrCreate(parent, getDeviceId())
+                .setDisplayName(getDeviceId())
+                .setSerializable(false)
+                .build();
         NotificationUtils.createNode(n, "deviceId", deviceId);
         NotificationUtils.createNode(n, "entity", entity);
         NotificationUtils.createNode(n, "band", band);
         if(geoCoordinate != null) {
-            NotificationUtils.addChild(n, geoCoordinate.createNode("geoCoordinate"));
+            geoCoordinate.createNode(n,"geoCoordinate");
         }
         NotificationUtils.createNode(n, "notificationType", notificationType);
         NotificationUtils.createNode(n, "ipAddress", ipAddress);
@@ -62,10 +65,10 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "eventId", eventId);
         NotificationUtils.createNode(n, "manufacturer", manufacturer);
         if(maxDetectedRssi != null)
-            NotificationUtils.addChild(n, maxDetectedRssi.createNode("maxDetectedRssi"));
+            maxDetectedRssi.createNode(n, "maxDetectedRssi");
         NotificationUtils.createNode(n, "ssid", ssid);
         if(rawLocation != null)
-            NotificationUtils.addChild(n, rawLocation.createNode("rawLocation"));
+            rawLocation.createNode(n, "rawLocation");
         NotificationUtils.createNode(n, "locComputeType", locComputeType);
         NotificationUtils.createNode(n, "subscriptionName", subscriptionName);
         NotificationUtils.createNode(n, "associated", associated);
@@ -75,9 +78,8 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "confidenceFactor", confidenceFactor);
         NotificationUtils.createNode(n, "floorId", floorId);
         if(locationCoordinate != null)
-            NotificationUtils.addChild(n, locationCoordinate.createNode("locationCoordinate"));
+            locationCoordinate.createNode(n, "locationCoordinate");
         n.setMetaData(this);
-        n.setSerializable(false);
         return n;
     }
 }

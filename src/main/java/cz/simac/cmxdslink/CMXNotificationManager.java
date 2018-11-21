@@ -122,32 +122,13 @@ public class CMXNotificationManager {
 
     public void update(CMXNotification notification) {
         CMXDSLink.LOGGER.debug("In update(CMXNotification notification) method");
-        // update old node
-        if(data.containsKey(notification.getDeviceId())) {
-            CMXDSLink.LOGGER.debug("updating nodes");
-            Node n = data.get(notification.getDeviceId());
-            // update every node in existing parent node
-            for(Node node : notification.createNode().getChildren().values()){
-                getOrCreate(n, node.getName())
-                        .setDisplayName(node.getDisplayName())
-                        .setValueType(node.getValueType())
-                        .setValue(node.getValue())
-                        .setSerializable(false)
-                        .build();
-            }
-            n.setMetaData(notification);
-            CMXDSLink.LOGGER.debug("succesfully updated nodes");
-            return;
-        }
-        CMXDSLink.LOGGER.debug("creating nodes");
-        // create new node
-        Node node = notification.createNode();
-        NotificationUtils.addChild(rootNode, node);
+        // create/update node
+        Node node = notification.createNode(rootNode);
         data.put(notification.getDeviceId(), node);
         CMXDSLink.LOGGER.debug("succesfully created nodes");
     }
 
-    private static NodeBuilder getOrCreate(Node parent, String name) {
+    public static NodeBuilder getOrCreate(Node parent, String name) {
         CMXDSLink.LOGGER.debug("In getOrCreate(Node parent, String name) method");
         Node child = parent.getChild(name, true);
         if (child == null) {

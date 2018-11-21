@@ -1,6 +1,7 @@
 package cz.simac.cmxdslink.cmxdata;
 
 import cz.simac.cmxdslink.CMXDSLink;
+import cz.simac.cmxdslink.CMXNotificationManager;
 import org.dsa.iot.dslink.link.Linkable;
 import org.dsa.iot.dslink.node.Node;
 import org.dsa.iot.dslink.node.NodeBuilder;
@@ -18,8 +19,9 @@ public class NotificationUtils {
             CMXDSLink.LOGGER.debug(name + " == null");
             return;
         }
-        parent.createChild(name, true)
+        CMXNotificationManager.getOrCreate(parent, name)
                 .setDisplayName(name)
+                .setSerializable(false)
                 .setValueType(ValueType.STRING)
                 .setValue(new Value(value))
                 .build();
@@ -30,8 +32,9 @@ public class NotificationUtils {
             CMXDSLink.LOGGER.debug(name + " == null");
             return;
         }
-        parent.createChild(name, true)
+        CMXNotificationManager.getOrCreate(parent, name)
                 .setDisplayName(name)
+                .setSerializable(false)
                 .setValueType(ValueType.NUMBER)
                 .setValue(new Value(value))
                 .build();
@@ -42,8 +45,9 @@ public class NotificationUtils {
             CMXDSLink.LOGGER.debug(name + " == null");
             return;
         }
-        parent.createChild(name, true)
+        CMXNotificationManager.getOrCreate(parent, name)
                 .setDisplayName(name)
+                .setSerializable(false)
                 .setValueType(ValueType.BOOL)
                 .setValue(new Value(value))
                 .build();
@@ -56,8 +60,9 @@ public class NotificationUtils {
         }
         JsonArray tmp = new JsonArray();
         tmp.addAll(0, Arrays.asList(value));
-        parent.createChild(name, true)
+        CMXNotificationManager.getOrCreate(parent, name)
                 .setDisplayName(name)
+                .setSerializable(false)
                 .setValueType(ValueType.ARRAY)
                 .setValue(new Value(tmp))
                 .build();

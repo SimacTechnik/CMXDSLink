@@ -1,6 +1,7 @@
 package cz.simac.cmxdslink.cmxdata;
 
 import cz.simac.cmxdslink.CMXDSLink;
+import cz.simac.cmxdslink.CMXNotificationManager;
 import org.dsa.iot.dslink.node.Node;
 import org.dsa.iot.dslink.util.NodeUtils;
 
@@ -37,19 +38,21 @@ public class MovementNotification implements CMXNotification {
     }
 
     @Override
-    public Node createNode() {
+    public Node createNode(Node parent) {
         CMXDSLink.LOGGER.debug("In MovementNotification::createNode() method");
-        Node n = new Node(getDeviceId(), null, NotificationUtils.link, true);
-        n.setDisplayName(getDeviceId());
+        Node n = CMXNotificationManager.getOrCreate(parent, getDeviceId())
+                .setDisplayName(getDeviceId())
+                .setSerializable(false)
+                .build();
         NotificationUtils.createNode(n, "deviceId", deviceId);
         NotificationUtils.createNode(n, "confidenceFactor", confidenceFactor);
         NotificationUtils.createNode(n, "floorId", floorId);
         NotificationUtils.createNode(n, "lastSeen", lastSeen);
         if(geoGeoCoordinate != null)
-            NotificationUtils.addChild(n, geoGeoCoordinate.createNode("geoGeoCoordinate"));
+            geoGeoCoordinate.createNode(n, "geoGeoCoordinate");
         NotificationUtils.createNode(n, "associated", associated);
         if(locationCoordinate != null)
-            NotificationUtils.addChild(n, locationCoordinate.createNode("locationCoordinate"));
+            locationCoordinate.createNode(n, "locationCoordinate");
         NotificationUtils.createNode(n, "eventId", eventId);
         NotificationUtils.createNode(n, "notificationType", notificationType);
         NotificationUtils.createNode(n, "moveDistanceInFt", moveDistanceInFt);
@@ -64,7 +67,6 @@ public class MovementNotification implements CMXNotification {
         NotificationUtils.createNode(n, "ipAddress", ipAddress);
         NotificationUtils.createNode(n, "entity", entity);
         n.setMetaData(this);
-        n.setSerializable(false);
         return n;
     }
 }
