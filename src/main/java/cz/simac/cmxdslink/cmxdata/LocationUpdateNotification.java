@@ -1,6 +1,7 @@
 package cz.simac.cmxdslink.cmxdata;
 
 import cz.simac.cmxdslink.CMXDSLink;
+import org.dsa.iot.dslink.DSLink;
 import org.dsa.iot.dslink.node.Node;
 
 public class LocationUpdateNotification implements CMXNotification {
@@ -48,8 +49,9 @@ public class LocationUpdateNotification implements CMXNotification {
         NotificationUtils.createNode(n, "deviceId", deviceId);
         NotificationUtils.createNode(n, "entity", entity);
         NotificationUtils.createNode(n, "band", band);
-        if(geoCoordinate != null)
+        if(geoCoordinate != null) {
             n.addChild(geoCoordinate.createNode("geoCoordinate"));
+        }
         NotificationUtils.createNode(n, "notificationType", notificationType);
         NotificationUtils.createNode(n, "ipAddress", ipAddress);
         NotificationUtils.createNode(n, "bleTagInfo", bleTagInfo);
