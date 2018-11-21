@@ -90,15 +90,11 @@ public class CMXNotificationManager {
     private void render() {
         CMXDSLink.LOGGER.debug("In render() method");
         rootNode.clearChildren();
-        Map<String, Node> tmp = new HashMap<>();
-        Node oldRootNode = rootNode;
-        rootNode = NotificationUtils.copyNode(oldRootNode.getParent(), oldRootNode);
-        oldRootNode.delete(true);
         try {
             for (Node node : data.values()) {
                 if (groupBy == null) {
                     CMXDSLink.LOGGER.debug("groupBy == null");
-                    tmp.put(((CMXNotification)node.getMetaData()).getDeviceId(), NotificationUtils.copyNode(rootNode, node));
+                    NotificationUtils.addChild(rootNode, node);
                 } else {
                     CMXDSLink.LOGGER.debug("groupBy == " + groupBy.getName());
                     String key = groupBy.get(node.getMetaData()).toString();
@@ -106,12 +102,9 @@ public class CMXNotificationManager {
                             .setDisplayName(key)
                             .setSerializable(false)
                             .build();
-                    tmp.put(((CMXNotification)node.getMetaData()).getDeviceId(), NotificationUtils.copyNode(parent, node));
+                    NotificationUtils.addChild(parent, node);
                 }
             }
-            data.values().forEach(a -> a.delete(true));
-            data.clear();
-            data = tmp;
         } catch (IllegalAccessException ignore) {}
     }
 
@@ -136,11 +129,11 @@ public class CMXNotificationManager {
             parent = rootNode;
         else {
             try {
-            String val = groupBy.get(notification).toString();
-            parent = getOrCreate(rootNode, val)
-                    .setDisplayName(val)
-                    .setSerializable(false)
-                    .build();
+                String val = groupBy.get(notification).toString();
+                parent = getOrCreate(rootNode, val)
+                        .setDisplayName(val)
+                        .setSerializable(false)
+                        .build();
             } catch(IllegalAccessException a) {
                 parent = rootNode;
             }
