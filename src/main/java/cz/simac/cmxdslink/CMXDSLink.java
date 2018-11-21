@@ -2,6 +2,7 @@ package cz.simac.cmxdslink;
 
 import com.sun.net.httpserver.HttpContext;
 import cz.simac.cmxdslink.cmxdata.CMXTypes;
+import cz.simac.cmxdslink.cmxdata.NotificationUtils;
 import org.dsa.iot.dslink.DSLink;
 import org.dsa.iot.dslink.DSLinkHandler;
 import org.dsa.iot.dslink.node.Node;
@@ -60,6 +61,7 @@ public class CMXDSLink extends DSLinkHandler {
     public void onResponderInitialized(final DSLink link) {
         LOGGER.info("Initialized");
         superRoot = link.getNodeManager().getSuperRoot();
+        NotificationUtils.link = superRoot.getLink();
         makeAddCMX();
         receiver = new CMXNotifyReceiver(cmxListennerAddress);
         try {

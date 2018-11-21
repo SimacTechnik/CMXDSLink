@@ -38,7 +38,7 @@ public class MovementNotification implements CMXNotification {
     @Override
     public Node createNode() {
         CMXDSLink.LOGGER.debug("In MovementNotification::createNode() method");
-        Node n = new Node(getDeviceId(), null, null, true);
+        Node n = new Node(getDeviceId(), null, NotificationUtils.link, true);
         n.setDisplayName(getDeviceId());
         NotificationUtils.createNode(n, "deviceId", deviceId);
         NotificationUtils.createNode(n, "confidenceFactor", confidenceFactor);

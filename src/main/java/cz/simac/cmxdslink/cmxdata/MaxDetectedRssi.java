@@ -11,7 +11,7 @@ public class MaxDetectedRssi {
     public Number lastHeardInSeconds;
 
     public Node createNode(String name) {
-        Node n = new Node(name, null, null, true);
+        Node n = new Node(name, null, NotificationUtils.link, true);
         n.setDisplayName(name);
         NotificationUtils.createNode(n, "antennaIndex", antennaIndex);
         NotificationUtils.createNode(n, "slot", slot);

@@ -8,7 +8,7 @@ public class GeoCoordinate {
     public String unit;
 
     public Node createNode(String name){
-        Node n = new Node(name, null, null, true);
+        Node n = new Node(name, null, NotificationUtils.link, true);
         n.setDisplayName(name);
         NotificationUtils.createNode(n, "latitude", latitude);
         NotificationUtils.createNode(n, "longitude", longitude);

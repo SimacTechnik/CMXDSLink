@@ -1,6 +1,7 @@
 package cz.simac.cmxdslink.cmxdata;
 
 import cz.simac.cmxdslink.CMXDSLink;
+import org.dsa.iot.dslink.link.Linkable;
 import org.dsa.iot.dslink.node.Node;
 import org.dsa.iot.dslink.node.value.Value;
 import org.dsa.iot.dslink.node.value.ValueType;
@@ -9,6 +10,8 @@ import org.dsa.iot.dslink.util.json.JsonArray;
 import java.util.Arrays;
 
 public class NotificationUtils {
+    public static Linkable link = null;
+
     public static void createNode(Node parent, String name, String value) {
         if(value == null) {
             CMXDSLink.LOGGER.debug(name + " == null");

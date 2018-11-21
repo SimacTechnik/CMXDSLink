@@ -9,7 +9,7 @@ public class LocationCoordinate {
     public String unit;
 
     public Node createNode(String name) {
-        Node n = new Node(name, null, null, true);
+        Node n = new Node(name, null, NotificationUtils.link, true);
         n.setDisplayName(name);
         NotificationUtils.createNode(n, "z", z);
         NotificationUtils.createNode(n, "x", x);
