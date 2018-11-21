@@ -7,6 +7,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,12 +62,7 @@ public class CMXNotificationParser {
                     break;
             }
             CMXDSLink.LOGGER.debug("setting fields of new object");
-            try {
-                for(Field f : useFields){
-                        CMXDSLink.LOGGER.debug("field name: "+f.getName());
-                        f.set(notification, jObj.get(f.getName()));
-                }
-            } catch(IllegalAccessException iae) { return null; }
+            FillFields(notification, useFields, jObj);
             if(notification == null) {
                 CMXDSLink.LOGGER.debug("notification == null");
                 CMXDSLink.LOGGER.debug("leaving Encode method with null object");
@@ -77,6 +73,34 @@ public class CMXNotificationParser {
         }
         CMXDSLink.LOGGER.debug("leaving Encode method with array of notifications");
         return list.toArray(new CMXNotification[0]);
+    }
+
+    private static void FillFields(Object obj, Field[] useFields, JSONObject jObj) {
+        try {
+            for(Field f : useFields){
+                CMXDSLink.LOGGER.debug("field name: "+f.getName());
+                Class<?> cls = f.getType();
+                if(cls.isAssignableFrom(Number.class) || cls.isAssignableFrom(String.class) || cls.isAssignableFrom(Boolean.class)) {
+                    CMXDSLink.LOGGER.debug("simple type");
+                    f.set(obj, jObj.get(f.getName()));
+                }
+                else if(cls.isArray()) {
+                    CMXDSLink.LOGGER.debug("array");
+                    List tmp = (List)jObj.get(f.getName());
+                    f.set(obj, tmp.toArray());
+                }
+                else {
+                    CMXDSLink.LOGGER.debug("object: "+cls.getName());
+                    try {
+                        Object newObj = cls.getConstructor().newInstance();
+                        Field[] fields = filterPublicFields(cls.getDeclaredFields());
+                        FillFields(newObj, fields, (JSONObject)jObj.get(f.getName()));
+                    } catch (NoSuchMethodException | InstantiationException | InvocationTargetException ignore) {
+                        return;
+                    }
+                }
+            }
+        } catch(IllegalAccessException iae) { return; }
     }
 
     private static JSONArray Parse(String data){
