@@ -97,9 +97,10 @@ public class CMXNotificationManager {
                     NotificationUtils.addChild(rootNode, node);
                 } else {
                     CMXDSLink.LOGGER.debug("groupBy == " + groupBy.getName());
-                    String key = groupBy.get(node).toString();
+                    String key = groupBy.get(node.getMetaData()).toString();
                     Node parent = getOrCreate(rootNode, key)
                             .setDisplayName(key)
+                            .setSerializable(false)
                             .build();
                     NotificationUtils.addChild(parent, node);
                 }
