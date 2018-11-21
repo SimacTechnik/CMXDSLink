@@ -38,7 +38,7 @@ public class AssociationNotification implements CMXNotification {
     @Override
     public Node createNode() {
         CMXDSLink.LOGGER.debug("In AssociationNotification::createNode() method");
-        Node n = new Node(getDeviceId().replace(":", ""), null, null, true);
+        Node n = new Node(getDeviceId(), null, null, true);
         n.setDisplayName(getDeviceId());
         NotificationUtils.createNode(n, "deviceId", deviceId);
         NotificationUtils.createNode(n, "entity", entity);
