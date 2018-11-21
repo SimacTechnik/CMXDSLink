@@ -129,9 +129,9 @@ public class CMXNotificationManager {
             // update every node in existing parent node
             for(Node node : notification.createNode().getChildren().values()){
                 getOrCreate(n, node.getName())
-                        .setDisplayName(n.getDisplayName())
-                        .setValueType(n.getValueType())
-                        .setValue(n.getValue())
+                        .setDisplayName(node.getDisplayName())
+                        .setValueType(node.getValueType())
+                        .setValue(node.getValue())
                         .setSerializable(false)
                         .build();
             }
