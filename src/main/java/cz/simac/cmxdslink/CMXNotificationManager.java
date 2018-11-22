@@ -91,6 +91,7 @@ public class CMXNotificationManager {
         CMXDSLink.LOGGER.debug("In render() method");
         try {
             Map<String, Node> tmpData = new HashMap<>();
+            rootNode.getChildren().values().forEach(a -> a.delete(true));
             for (Node node : data.values()) {
                 CMXNotification notification = node.getMetaData();
                 CMXDSLink.LOGGER.debug("got MetaData from deviceId: "+notification.getDeviceId());
@@ -109,7 +110,6 @@ public class CMXNotificationManager {
                 }
                 tmpData.put(notification.getDeviceId(), newNode);
             }
-            data.values().forEach(a -> a.delete(true));
             data.clear();
             data = tmpData;
         } catch (IllegalAccessException ignore) {
