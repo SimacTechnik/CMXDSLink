@@ -90,7 +90,19 @@ public class CMXNotificationManager {
     private void render() {
         CMXDSLink.LOGGER.debug("In render() method");
         try {
-            rootNode.getChildren().values().stream().filter(a -> a.getAction() == null).forEach(a -> a.delete(true));
+            if(rootNode.getChildren() != null){
+                for(Node n : rootNode.getChildren().values()) {
+                    if(n.getAction() != null) {
+                        CMXDSLink.LOGGER.debug("Skipping node "+n.getName());
+                        continue;
+                    }
+                    CMXDSLink.LOGGER.debug("Removing "+n.getName());
+                    rootNode.removeChild(n, true);
+                    CMXDSLink.LOGGER.debug("Removed");
+
+                }
+            }
+            CMXDSLink.LOGGER.debug("RootNode should be clear");
             for (CMXNotification notification : data.values()) {
                 CMXDSLink.LOGGER.debug("got MetaData from deviceId: "+notification.getDeviceId());
                 if (groupBy == null) {
