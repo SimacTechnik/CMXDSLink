@@ -14,7 +14,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class CMXNotificationManager {
-    private Map<String, Node> data = new HashMap<>();
+    private Map<String, CMXNotification> data = new HashMap<>();
     private Node rootNode;
     private Field groupBy = null;
     private CMXTypes type;
@@ -90,28 +90,22 @@ public class CMXNotificationManager {
     private void render() {
         CMXDSLink.LOGGER.debug("In render() method");
         try {
-            Map<String, Node> tmpData = new HashMap<>();
-            rootNode.getChildren().values().forEach(a -> a.delete(true));
-            for (Node node : data.values()) {
-                CMXNotification notification = node.getMetaData();
+            rootNode.getChildren().values().stream().filter(a -> a.getAction() == null).forEach(a -> a.delete(true));
+            for (CMXNotification notification : data.values()) {
                 CMXDSLink.LOGGER.debug("got MetaData from deviceId: "+notification.getDeviceId());
-                Node newNode;
                 if (groupBy == null) {
                     CMXDSLink.LOGGER.debug("groupBy == null");
-                    newNode = notification.createNode(rootNode);
+                    notification.createNode(rootNode);
                 } else {
                     CMXDSLink.LOGGER.debug("groupBy == " + groupBy.getName());
-                    String key = groupBy.get(node.getMetaData()).toString();
+                    String key = groupBy.get(notification).toString();
                     Node parent = getOrCreate(rootNode, key)
                             .setDisplayName(key)
                             .setSerializable(false)
                             .build();
-                    newNode = notification.createNode(parent);
+                    notification.createNode(parent);
                 }
-                tmpData.put(notification.getDeviceId(), newNode);
             }
-            data.clear();
-            data = tmpData;
         } catch (IllegalAccessException ignore) {
             CMXDSLink.LOGGER.debug("catched IllegalAccessException in render() method");
         }
@@ -148,8 +142,8 @@ public class CMXNotificationManager {
                 parent = rootNode;
             }
         }
-        Node node = notification.createNode(parent);
-        data.put(notification.getDeviceId(), node);
+        notification.createNode(parent);
+        data.put(notification.getDeviceId(), notification);
         CMXDSLink.LOGGER.debug("succesfully created nodes");
     }
 
