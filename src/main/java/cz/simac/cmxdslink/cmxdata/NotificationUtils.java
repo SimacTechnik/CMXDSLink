@@ -69,10 +69,7 @@ public class NotificationUtils {
     }
 
     private static Node hideNode(Node n, Boolean visible) {
-        if(!visible) {
-            n.delete(false);
-            return null;
-        }
+        n.setHidden(!visible);
         return n;
     }
 
