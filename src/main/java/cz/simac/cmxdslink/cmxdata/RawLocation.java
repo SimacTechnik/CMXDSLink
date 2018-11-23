@@ -13,9 +13,9 @@ public class RawLocation {
                 .setDisplayName(name)
                 .setSerializable(false)
                 .build();
-        NotificationUtils.createNode(n, "rawX", rawX);
-        NotificationUtils.createNode(n, "unit", unit);
-        NotificationUtils.createNode(n, "rawY", rawY);
+        NotificationUtils.createNode(n, "rawX", rawX, true);
+        NotificationUtils.createNode(n, "unit", unit, true);
+        NotificationUtils.createNode(n, "rawY", rawY, true);
         return n;
     }
 }

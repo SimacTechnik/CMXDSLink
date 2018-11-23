@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class NotificationUtils {
     public static Linkable link = null;
 
-    public static void createNode(Node parent, String name, String value) {
+    public static void createNode(Node parent, String name, String value, Boolean visible) {
         if(value == null) {
             CMXDSLink.LOGGER.debug(name + " == null");
             return;
@@ -24,10 +24,11 @@ public class NotificationUtils {
                 .setSerializable(false)
                 .setValueType(ValueType.STRING)
                 .setValue(new Value(value))
+                .setHidden(!visible)
                 .build();
     }
 
-    public static void createNode(Node parent, String name, Number value) {
+    public static void createNode(Node parent, String name, Number value, Boolean visible) {
         if(value == null) {
             CMXDSLink.LOGGER.debug(name + " == null");
             return;
@@ -37,10 +38,11 @@ public class NotificationUtils {
                 .setSerializable(false)
                 .setValueType(ValueType.NUMBER)
                 .setValue(new Value(value))
+                .setHidden(!visible)
                 .build();
     }
 
-    public static void createNode(Node parent, String name, Boolean value) {
+    public static void createNode(Node parent, String name, Boolean value, Boolean visible) {
         if(value == null) {
             CMXDSLink.LOGGER.debug(name + " == null");
             return;
@@ -50,10 +52,11 @@ public class NotificationUtils {
                 .setSerializable(false)
                 .setValueType(ValueType.BOOL)
                 .setValue(new Value(value))
+                .setHidden(!visible)
                 .build();
     }
 
-    public static void createNode(Node parent, String name, String[] value) {
+    public static void createNode(Node parent, String name, String[] value, Boolean visible) {
         if(value == null) {
             CMXDSLink.LOGGER.debug(name + " == null");
             return;
@@ -65,6 +68,7 @@ public class NotificationUtils {
                 .setSerializable(false)
                 .setValueType(ValueType.ARRAY)
                 .setValue(new Value(tmp))
+                .setHidden(!visible)
                 .build();
     }
 

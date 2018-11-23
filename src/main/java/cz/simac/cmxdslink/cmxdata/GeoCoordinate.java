@@ -13,9 +13,9 @@ public class GeoCoordinate {
                 .setDisplayName(name)
                 .setSerializable(false)
                 .build();
-        NotificationUtils.createNode(n, "latitude", latitude);
-        NotificationUtils.createNode(n, "longitude", longitude);
-        NotificationUtils.createNode(n, "unit", unit);
+        NotificationUtils.createNode(n, "latitude", latitude, true);
+        NotificationUtils.createNode(n, "longitude", longitude, true);
+        NotificationUtils.createNode(n, "unit", unit, true);
         return n;
     }
 }

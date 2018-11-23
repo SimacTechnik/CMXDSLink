@@ -14,10 +14,10 @@ public class LocationCoordinate {
                 .setDisplayName(name)
                 .setSerializable(false)
                 .build();
-        NotificationUtils.createNode(n, "z", z);
-        NotificationUtils.createNode(n, "x", x);
-        NotificationUtils.createNode(n, "y", y);
-        NotificationUtils.createNode(n, "unit", unit);
+        NotificationUtils.createNode(n, "z", z, true);
+        NotificationUtils.createNode(n, "x", x, true);
+        NotificationUtils.createNode(n, "y", y, true);
+        NotificationUtils.createNode(n, "unit", unit, true);
         return n;
     }
 }

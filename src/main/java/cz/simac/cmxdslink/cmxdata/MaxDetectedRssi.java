@@ -16,12 +16,12 @@ public class MaxDetectedRssi {
                 .setDisplayName(name)
                 .setSerializable(false)
                 .build();
-        NotificationUtils.createNode(n, "antennaIndex", antennaIndex);
-        NotificationUtils.createNode(n, "slot", slot);
-        NotificationUtils.createNode(n, "rssi", rssi);
-        NotificationUtils.createNode(n, "apMacAddress", apMacAddress);
-        NotificationUtils.createNode(n, "band", band);
-        NotificationUtils.createNode(n, "lastHeardInSeconds", lastHeardInSeconds);
+        NotificationUtils.createNode(n, "antennaIndex", antennaIndex, true);
+        NotificationUtils.createNode(n, "slot", slot, true);
+        NotificationUtils.createNode(n, "rssi", rssi, true);
+        NotificationUtils.createNode(n, "apMacAddress", apMacAddress, true);
+        NotificationUtils.createNode(n, "band", band, true);
+        NotificationUtils.createNode(n, "lastHeardInSeconds", lastHeardInSeconds, true);
         return n;
     }
 }

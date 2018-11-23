@@ -16,19 +16,31 @@ import java.util.*;
 public class CMXNotificationManager {
     private Map<String, CMXNotification> data = new HashMap<>();
     private Node rootNode;
+    private Class notificationClass;
     private Field groupBy = null;
+    private Map<String, Boolean> filter = new HashMap<>();
     private CMXTypes type;
 
     public CMXNotificationManager(Node rootNode, CMXTypes type){
         CMXDSLink.LOGGER.debug("In CMXNotificationManager ctor");
         this.rootNode = rootNode;
         this.type = type;
+        makeNotificationClass();
         makeGroupBy();
+        makeFilter();
     }
 
-    private void makeGroupBy() {
-        CMXDSLink.LOGGER.debug("In makeGroupBy() method");
-        Class notificationClass;
+    public CMXNotificationManager(Node rootNode, CMXTypes type, Field groupBy) {
+        CMXDSLink.LOGGER.debug("In CMXNotificationManager ctor");
+        this.rootNode = rootNode;
+        this.type = type;
+        this.groupBy = groupBy;
+        makeNotificationClass();
+        makeGroupBy();
+        makeFilter();
+    }
+
+    private void makeNotificationClass() {
         switch(type){
             case MOVEMENT:
                 CMXDSLink.LOGGER.debug("type: MOVEMENT");
@@ -47,12 +59,47 @@ public class CMXNotificationManager {
                 CMXDSLink.LOGGER.debug("type: UNKNOWN");
                 notificationClass = AssociationNotification.class;
         }
+    }
+
+    private void makeFilter() {
+        CMXDSLink.LOGGER.debug("In makeFilter() method");
         // get all PUBLIC fields
         Field[] fields = Arrays.stream(notificationClass.getDeclaredFields())
                 .filter(f -> Modifier.isPublic(f.getModifiers()))
                 .toArray(Field[]::new);
         Collection<Field> fieldCollection = Arrays.asList(fields);
-        CMXDSLink.LOGGER.debug("All public filed names: " + String.join(", ", Arrays.stream(fields).map(Field::getName).toArray(String[]::new)));
+
+        // get field names
+        String[] fieldNames = fieldCollection.stream().map(Field::getName).toArray(String[]::new);
+
+        // default values (true)
+        for(String fieldName: fieldNames) {
+            filter.put(fieldName, true);
+        }
+
+        // action for filtering
+        Action act = new Action(Permission.READ, e -> {
+           for(String fieldName : fieldNames) {
+                filter.put(fieldName, e.getParameter(fieldName).getBool());
+           }
+        });
+        // add all parameters
+        for(String fieldName : fieldNames) {
+            act.addParameter(new Parameter(fieldName, ValueType.BOOL, new Value(true)));
+        }
+        // setting the action
+        Node anode = rootNode.getChild(CMXConstants.FILTER, true);
+        if(anode == null) rootNode.createChild(CMXConstants.FILTER, true).setAction(act).build().setSerializable(false);
+        else anode.setAction(act);
+    }
+
+    private void makeGroupBy() {
+        CMXDSLink.LOGGER.debug("In makeGroupBy() method");
+        // get all PUBLIC fields
+        Field[] fields = Arrays.stream(notificationClass.getDeclaredFields())
+                .filter(f -> Modifier.isPublic(f.getModifiers()))
+                .toArray(Field[]::new);
+        Collection<Field> fieldCollection = Arrays.asList(fields);
 
         // get field names
         String[] fieldNames = fieldCollection.stream().map(Field::getName).toArray(String[]::new);
@@ -64,7 +111,6 @@ public class CMXNotificationManager {
             CMXDSLink.LOGGER.debug("GROUP_BY: " + selected);
             // get field which have this name
             changeGroupBy(fieldCollection.stream().filter(a -> a.getName().equals(selected)).findFirst().get());
-            CMXDSLink.LOGGER.debug("grouping by: " + selected);
         });
         // create ValueType for Group By Parameter
         ValueType groupByEnum = ValueType.makeEnum(fieldNames);
@@ -76,15 +122,6 @@ public class CMXNotificationManager {
         Node anode = rootNode.getChild(CMXConstants.GROUP_BY, true);
         if(anode == null) rootNode.createChild(CMXConstants.GROUP_BY, true).setAction(act).build().setSerializable(false);
         else anode.setAction(act);
-        CMXDSLink.LOGGER.debug("Set group by action");
-    }
-
-    public CMXNotificationManager(Node rootNode, CMXTypes type, Field groupBy) {
-        CMXDSLink.LOGGER.debug("In CMXNotificationManager ctor");
-        this.rootNode = rootNode;
-        this.type = type;
-        this.groupBy = groupBy;
-        makeGroupBy();
     }
 
     private void render() {
@@ -93,35 +130,27 @@ public class CMXNotificationManager {
             if(rootNode.getChildren() != null){
                 for(Node n : rootNode.getChildren().values()) {
                     if(n.getAction() != null) {
-                        CMXDSLink.LOGGER.debug("Skipping node "+n.getName());
                         continue;
                     }
-                    CMXDSLink.LOGGER.debug("Removing "+n.getName());
-                    rootNode.removeChild(n, true);
-                    CMXDSLink.LOGGER.debug("Removed");
+                    rootNode.removeChild(n, false);
 
                 }
             }
-            CMXDSLink.LOGGER.debug("RootNode should be clear");
             for (CMXNotification notification : data.values()) {
-                CMXDSLink.LOGGER.debug("got MetaData from deviceId: "+notification.getDeviceId());
                 if (groupBy == null) {
-                    CMXDSLink.LOGGER.debug("groupBy == null");
-                    notification.createNode(rootNode);
+                    notification.createNode(rootNode, filter);
                 } else {
-                    CMXDSLink.LOGGER.debug("groupBy == " + groupBy.getName());
                     String key = groupBy.get(notification).toString();
                     Node parent = getOrCreate(rootNode, key)
                             .setDisplayName(key)
                             .setSerializable(false)
                             .build();
-                    notification.createNode(parent);
+                    notification.createNode(parent, filter);
                 }
             }
         } catch (IllegalAccessException ignore) {
             CMXDSLink.LOGGER.debug("catched IllegalAccessException in render() method");
         }
-        CMXDSLink.LOGGER.debug("Leaving render() method");
     }
 
     private void changeGroupBy(Field groupBy) {
@@ -154,7 +183,7 @@ public class CMXNotificationManager {
                 parent = rootNode;
             }
         }
-        notification.createNode(parent);
+        notification.createNode(parent, filter);
         data.put(notification.getDeviceId(), notification);
         CMXDSLink.LOGGER.debug("succesfully created nodes");
     }
@@ -163,10 +192,8 @@ public class CMXNotificationManager {
         CMXDSLink.LOGGER.debug("In getOrCreate(Node parent, String name) method");
         Node child = parent.getChild(name, true);
         if (child == null) {
-            CMXDSLink.LOGGER.debug("child == null");
             return parent.createChild(name, true);
         } else {
-            CMXDSLink.LOGGER.debug("child != null");
             return child.createFakeBuilder();
         }
     }
