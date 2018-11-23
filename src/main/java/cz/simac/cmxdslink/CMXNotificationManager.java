@@ -19,6 +19,7 @@ public class CMXNotificationManager {
     private Class notificationClass;
     private Field groupBy = null;
     private Map<String, Boolean> filter = new HashMap<>();
+    private Action filterAction;
     private CMXTypes type;
 
     public CMXNotificationManager(Node rootNode, CMXTypes type){
@@ -27,7 +28,7 @@ public class CMXNotificationManager {
         this.type = type;
         makeNotificationClass();
         makeGroupBy();
-        makeFilter();
+        makeFiltering();
     }
 
     public CMXNotificationManager(Node rootNode, CMXTypes type, Field groupBy) {
@@ -37,7 +38,7 @@ public class CMXNotificationManager {
         this.groupBy = groupBy;
         makeNotificationClass();
         makeGroupBy();
-        makeFilter();
+        makeFiltering();
     }
 
     private void makeNotificationClass() {
@@ -61,7 +62,7 @@ public class CMXNotificationManager {
         }
     }
 
-    private void makeFilter() {
+    private void makeFiltering() {
         CMXDSLink.LOGGER.debug("In makeFilter() method");
         // get all PUBLIC fields
         Field[] fields = Arrays.stream(notificationClass.getDeclaredFields())
@@ -77,20 +78,27 @@ public class CMXNotificationManager {
             filter.put(fieldName, true);
         }
 
-        // action for filtering
+        // action for reset filter
         Action act = new Action(Permission.READ, e -> {
-           for(String fieldName : fieldNames) {
-                filter.put(fieldName, e.getParameter(fieldName).getBool());
-           }
+            synchronized (filter) {
+                for (String fieldName : fieldNames) {
+                    filter.put(fieldName, true);
+                }
+            }
            render();
         });
-        // add all parameters
-        for(String fieldName : fieldNames) {
-            act.addParameter(new Parameter(fieldName, ValueType.BOOL, new Value(true)));
-        }
+
+        // action for every node
+        filterAction = new Action(Permission.READ, e -> {
+            synchronized (filter) {
+                filter.put(e.getNode().getParent().getName(), false);
+            }
+            render();
+        });
+
         // setting the action
-        Node anode = rootNode.getChild(CMXConstants.FILTER, true);
-        if(anode == null) rootNode.createChild(CMXConstants.FILTER, true).setAction(act).build().setSerializable(false);
+        Node anode = rootNode.getChild(CMXConstants.RESET_FILTER, true);
+        if(anode == null) rootNode.createChild(CMXConstants.RESET_FILTER, true).setAction(act).build().setSerializable(false);
         else anode.setAction(act);
     }
 
@@ -134,19 +142,24 @@ public class CMXNotificationManager {
                         continue;
                     }
                     rootNode.removeChild(n, false);
-
                 }
             }
-            for (CMXNotification notification : data.values()) {
-                if (groupBy == null) {
-                    notification.createNode(rootNode, filter);
-                } else {
-                    String key = groupBy.get(notification).toString();
-                    Node parent = getOrCreate(rootNode, key)
-                            .setDisplayName(key)
-                            .setSerializable(false)
-                            .build();
-                    notification.createNode(parent, filter);
+            synchronized (data) {
+                for (CMXNotification notification : data.values()) {
+                    if (groupBy == null) {
+                        synchronized (filter) {
+                            notification.createNode(rootNode, filter, filterAction);
+                        }
+                    } else {
+                        String key = groupBy.get(notification).toString();
+                        Node parent = getOrCreate(rootNode, key)
+                                .setDisplayName(key)
+                                .setSerializable(false)
+                                .build();
+                        synchronized (filter) {
+                            notification.createNode(parent, filter, filterAction);
+                        }
+                    }
                 }
             }
         } catch (IllegalAccessException ignore) {
@@ -184,8 +197,12 @@ public class CMXNotificationManager {
                 parent = rootNode;
             }
         }
-        notification.createNode(parent, filter);
-        data.put(notification.getDeviceId(), notification);
+        synchronized (filter) {
+            notification.createNode(parent, filter, filterAction);
+        }
+        synchronized (data) {
+            data.put(notification.getDeviceId(), notification);
+        }
         CMXDSLink.LOGGER.debug("succesfully created nodes");
     }
 

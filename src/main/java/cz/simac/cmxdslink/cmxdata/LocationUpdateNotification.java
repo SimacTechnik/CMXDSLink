@@ -1,9 +1,11 @@
 package cz.simac.cmxdslink.cmxdata;
 
+import cz.simac.cmxdslink.CMXConstants;
 import cz.simac.cmxdslink.CMXDSLink;
 import cz.simac.cmxdslink.CMXNotificationManager;
 import org.dsa.iot.dslink.DSLink;
 import org.dsa.iot.dslink.node.Node;
+import org.dsa.iot.dslink.node.actions.Action;
 
 import java.util.Map;
 
@@ -45,40 +47,61 @@ public class LocationUpdateNotification implements CMXNotification {
     }
 
     @Override
-    public Node createNode(Node parent, Map<String, Boolean> filter) {
+    public Node createNode(Node parent, Map<String, Boolean> filter, Action filterAction) {
         CMXDSLink.LOGGER.debug("In LocationUpdateNotification::createNode() method");
         Node n = CMXNotificationManager.getOrCreate(parent, getDeviceId())
                 .setDisplayName(getDeviceId())
                 .setSerializable(false)
                 .build();
-        NotificationUtils.createNode(n, "deviceId", deviceId, filter.get("deviceId"));
-        NotificationUtils.createNode(n, "entity", entity, filter.get("entity"));
-        NotificationUtils.createNode(n, "band", band, filter.get("band"));
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "deviceId", deviceId, filter.get("deviceId")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "entity", entity, filter.get("entity")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "band", band, filter.get("band")),
+                CMXConstants.FILTER_OUT, filterAction);
         if(geoCoordinate != null) {
             geoCoordinate.createNode(n,"geoCoordinate");
         }
-        NotificationUtils.createNode(n, "notificationType", notificationType, filter.get("notificationType"));
-        NotificationUtils.createNode(n, "ipAddress", ipAddress, filter.get("ipAddress"));
-        NotificationUtils.createNode(n, "bleTagInfo", bleTagInfo, filter.get("bleTagInfo"));
-        NotificationUtils.createNode(n, "floorRefId", floorRefId, filter.get("floorRefId"));
-        NotificationUtils.createNode(n, "apMacAddress", apMacAddress, filter.get("apMacAddress"));
-        NotificationUtils.createNode(n, "tagVendorData", tagVendorData, filter.get("tagVendorData"));
-        NotificationUtils.createNode(n, "locationMapHierarchy", locationMapHierarchy, filter.get("locationMapHierarchy"));
-        NotificationUtils.createNode(n, "eventId", eventId, filter.get("eventId"));
-        NotificationUtils.createNode(n, "manufacturer", manufacturer, filter.get("manufacturer"));
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "notificationType", notificationType, filter.get("notificationType")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "ipAddress", ipAddress, filter.get("ipAddress")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "bleTagInfo", bleTagInfo, filter.get("bleTagInfo")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "floorRefId", floorRefId, filter.get("floorRefId")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "apMacAddress", apMacAddress, filter.get("apMacAddress")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "tagVendorData", tagVendorData, filter.get("tagVendorData")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "locationMapHierarchy", locationMapHierarchy, filter.get("locationMapHierarchy")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "eventId", eventId, filter.get("eventId")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "manufacturer", manufacturer, filter.get("manufacturer")),
+                CMXConstants.FILTER_OUT, filterAction);
         if(maxDetectedRssi != null)
             maxDetectedRssi.createNode(n, "maxDetectedRssi");
-        NotificationUtils.createNode(n, "ssid", ssid, filter.get("ssid"));
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "ssid", ssid, filter.get("ssid")),
+                CMXConstants.FILTER_OUT, filterAction);
         if(rawLocation != null)
             rawLocation.createNode(n, "rawLocation");
-        NotificationUtils.createNode(n, "locComputeType", locComputeType, filter.get("locComputeType"));
-        NotificationUtils.createNode(n, "subscriptionName", subscriptionName, filter.get("subscriptionName"));
-        NotificationUtils.createNode(n, "associated", associated, filter.get("associated"));
-        NotificationUtils.createNode(n, "username", username, filter.get("username"));
-        NotificationUtils.createNode(n, "timestamp", timestamp, filter.get("timestamp"));
-        NotificationUtils.createNode(n, "lastSeen", lastSeen, filter.get("lastSeen"));
-        NotificationUtils.createNode(n, "confidenceFactor", confidenceFactor, filter.get("confidenceFactor"));
-        NotificationUtils.createNode(n, "floorId", floorId, filter.get("floorId"));
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "locComputeType", locComputeType, filter.get("locComputeType")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "subscriptionName", subscriptionName, filter.get("subscriptionName")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "associated", associated, filter.get("associated")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "username", username, filter.get("username")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "timestamp", timestamp, filter.get("timestamp")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "lastSeen", lastSeen, filter.get("lastSeen")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "confidenceFactor", confidenceFactor, filter.get("confidenceFactor")),
+                CMXConstants.FILTER_OUT, filterAction);
+        NotificationUtils.setAction(NotificationUtils.createNode(n, "floorId", floorId, filter.get("floorId")),
+                CMXConstants.FILTER_OUT, filterAction);
         if(locationCoordinate != null)
             locationCoordinate.createNode(n, "locationCoordinate");
         n.setMetaData(this);

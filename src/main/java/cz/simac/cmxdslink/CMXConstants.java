@@ -13,7 +13,8 @@ public interface CMXConstants {
     String ADD_CMX_RECEIVER = "Add CMX Receiver";
     String GROUP_BY = "Group by";
     String DEVICE_ID = "deviceId";
-    String FILTER = "Filter";
+    String RESET_FILTER = "Reset filter";
+    String FILTER_OUT = "Filter out";
     ValueType NOTIFICATION_TYPE = ValueType.makeEnum(
             ASSOCIATION,
             LOCATION_UPDATE,
