@@ -1,6 +1,5 @@
 package cz.simac.cmxdslink;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import com.sun.net.httpserver.HttpContext;
 import cz.simac.cmxdslink.cmxdata.CMXTypes;
 import cz.simac.cmxdslink.cmxdata.NotificationUtils;
