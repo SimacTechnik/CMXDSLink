@@ -82,6 +82,7 @@ public class CMXNotificationManager {
            for(String fieldName : fieldNames) {
                 filter.put(fieldName, e.getParameter(fieldName).getBool());
            }
+           render();
         });
         // add all parameters
         for(String fieldName : fieldNames) {
