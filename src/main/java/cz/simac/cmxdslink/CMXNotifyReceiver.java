@@ -38,11 +38,21 @@ public class CMXNotifyReceiver {
     public HttpContext addContext(String path, Node parentNode, CMXTypes type) {
         CMXDSLink.LOGGER.debug("In addContext(String path: "+path+", Node parentNode: "+
                 parentNode.getDisplayName()+", CMXTypes type: "+type.toString()+") method");
-        return server.createContext(path, new CMXHandler(parentNode, type));
+        if(server == null)
+            return null;
+        HttpContext ctx;
+        try {
+            ctx = server.createContext(path, new CMXHandler(parentNode, type));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return ctx;
     }
 
     public void removeContext(String path) {
         CMXDSLink.LOGGER.debug("In removeContext(String path: "+path+") method");
+        if(server == null)
+            return;
         server.removeContext(path);
     }
 

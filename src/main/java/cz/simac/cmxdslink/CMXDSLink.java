@@ -1,5 +1,6 @@
 package cz.simac.cmxdslink;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import com.sun.net.httpserver.HttpContext;
 import cz.simac.cmxdslink.cmxdata.CMXTypes;
 import cz.simac.cmxdslink.cmxdata.NotificationUtils;
@@ -73,7 +74,7 @@ public class CMXDSLink extends DSLinkHandler {
 
     private void makeAddCMX() {
         LOGGER.debug("in makeAddCMX() method");
-        Action act = new Action(Permission.READ, event -> handleAddCMX(event));
+        Action act = new Action(Permission.READ, this::handleAddCMX);
         act.addParameter(new Parameter(CMXConstants.NAME, ValueType.STRING, new Value("")));
         act.addParameter(new Parameter(CMXConstants.TYPE, CMXConstants.NOTIFICATION_TYPE, new Value(CMXConstants.NOTIFICATION_TYPE.getEnums().toArray(new String[0])[0])));
         act.addParameter(new Parameter(CMXConstants.URL, ValueType.STRING, new Value("/")));
@@ -82,7 +83,7 @@ public class CMXDSLink extends DSLinkHandler {
         else anode.setAction(act);
     }
 
-    private void handleAddCMX(ActionResult event) {
+    private void handleAddCMX(ActionResult event){
         LOGGER.debug("in handleAddCMX(ActionResult event) method");
         // get parameter values
         String name = event.getParameter(CMXConstants.NAME).getString();
@@ -131,13 +132,14 @@ public class CMXDSLink extends DSLinkHandler {
                 // delete node
                 parentNode.delete(true);
             });
-
-            // create option
-            Node anode = parentNode.getChild(CMXConstants.RM_CMX_RECEIVER, true);
-            if (anode == null) parentNode.createChild(CMXConstants.RM_CMX_RECEIVER, true).setAction(act).build().setSerializable(false);
-            else anode.setAction(act);
-            LOGGER.info("Created new CMX listener (" + name + ", " + type + ", " + path + ")");
-            receiver.addContext(path, parentNode, cmxType);
+            if(receiver.addContext(path, parentNode, cmxType) != null) {
+                // create option
+                Node anode = parentNode.getChild(CMXConstants.RM_CMX_RECEIVER, true);
+                if (anode == null)
+                    parentNode.createChild(CMXConstants.RM_CMX_RECEIVER, true).setAction(act).build().setSerializable(false);
+                else anode.setAction(act);
+                LOGGER.info("Created new CMX listener (" + name + ", " + type + ", " + path + ")");
+            }
         }
     }
 
