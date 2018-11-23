@@ -138,6 +138,8 @@ public class CMXDSLink extends DSLinkHandler {
                     parentNode.createChild(CMXConstants.RM_CMX_RECEIVER, true).setAction(act).build().setSerializable(false);
                 else anode.setAction(act);
                 LOGGER.info("Created new CMX listener (" + name + ", " + type + ", " + path + ")");
+            } else {
+                parentNode.delete(false);
             }
         }
     }
