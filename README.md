@@ -6,7 +6,6 @@ This link is listenning on 0.0.0.0:9090 as HTTP Server and handles CMX Notificat
 ## Requirements
   - Java (>8.0)
   - Maven
-  - Gradle
 
 ## Installation
 1. Run `./gradlew build distZip`
