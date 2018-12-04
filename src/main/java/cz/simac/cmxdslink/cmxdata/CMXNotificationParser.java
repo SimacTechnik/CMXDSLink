@@ -122,6 +122,7 @@ public class CMXNotificationParser {
                         Object newObj = cls.getConstructor().newInstance();
                         Field[] fields = filterPublicFields(cls.getDeclaredFields());
                         FillFields(newObj, fields, tmpObj);
+                        f.set(obj, newObj);
                     } catch (NoSuchMethodException | InstantiationException | InvocationTargetException ignore) {
                         return;
                     }
